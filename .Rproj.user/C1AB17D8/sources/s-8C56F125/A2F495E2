@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1508056661272.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "420383309",
+    "id" : "A2F495E2",
+    "lastKnownWriteTime" : 1508056657,
+    "last_content_update" : 1508056657,
+    "path" : "~/Rproject/krupwebsite/config.toml",
+    "project_path" : "config.toml",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "toml"
+}

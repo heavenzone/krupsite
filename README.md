@@ -1,2 +1,0 @@
-# krupsite
-my first website
