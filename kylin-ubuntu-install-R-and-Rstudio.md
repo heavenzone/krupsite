@@ -3,7 +3,7 @@
 标签： ubuntu   R语言   Rstudio
 
 ---
-[toc]
+
 
 ## 前言
 
