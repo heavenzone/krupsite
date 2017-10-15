@@ -1,6 +1,6 @@
 ﻿# kylin-ubuntu安装R语言和Rstudio
 
-标签（空格分隔）： ubuntu   R语言   Rstudio
+标签： ubuntu   R语言   Rstudio
 
 ---
 [toc]
