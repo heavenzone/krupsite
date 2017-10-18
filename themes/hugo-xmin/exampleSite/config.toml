@@ -9,8 +9,8 @@ preserveTaxonomyNames = true
 footnotereturnlinkcontents = "↩"
 
 [permalinks]
-    post = "/post/:year/:month/:slug/"
-    note = "/note/:year/:month/:slug/"
+    post = "/post/:year/:month/:day/:slug/"
+    note = "/note/:year/:month/:day/:slug/"
 
 [[menu.main]]
     name = "Home"
@@ -34,4 +34,4 @@ footnotereturnlinkcontents = "↩"
 
 [params]
     description = "A website built through Hugo and blogdown."
-    footer = "&copy; [Heaven Zone](https://haoguang.netlify.com) 2017 | [Github](https://github.com/heavenzone)"
+    footer = "&copy; [Yihui Xie](https://yihui.name) 2017 | [Github](https://github.com/yihui) | [Twitter](https://twitter.com/xieyihui)"
