@@ -96,7 +96,7 @@ sudo apt-get remove fcitx
 cd ~/下载/yong
 # 下面这句可不输入，如果yong-tool.sh没有可执行权限才运行这条语句
 chmod a+x yong-tool.sh 
-sudo ./yong-tool.sh –install
+sudo ./yong-tool.sh –install64
 ```
 
 可以下载一个**ChmSee**软件来查看压缩包里面的帮助文档**yong.chm**，先安装一些依赖包：
