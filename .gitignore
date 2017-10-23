@@ -9,7 +9,7 @@ Desktop.ini
 .Ruserdata
 blogdown
 .DS_Store # if a windows user, Thumbs.db instead
-/public/
+public/
 # if using Netlify
 
 

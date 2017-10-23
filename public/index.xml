@@ -1,66 +1,0 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Blackburn Theme Demo</title>
-    <link>/</link>
-    <description>Recent content on Blackburn Theme Demo</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <copyright>&amp;copy; 2016. All rights reserved.</copyright>
-    <lastBuildDate>Thu, 19 Oct 2017 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
-    
-    
-    <item>
-      <title>Mackup for your dotfiles</title>
-      <link>/post/2017-10-19-mackup-for-your-dotfiles/</link>
-      <pubDate>Thu, 19 Oct 2017 00:00:00 +0000</pubDate>
-      
-      <guid>/post/2017-10-19-mackup-for-your-dotfiles/</guid>
-      <description>简介最近学会了用git管理一些文件，并学会用R blogdown + github + netlify做博客网站，于是想怎么用git来管理linux下面的配置文件呢？那么多配置文件在不同文件夹，岂不是要建很多个repo？也想到把配置文件全部放在一个文件夹，然后做链接，但是操作起来还是比较麻烦，百度了一下，发现还真的有不少的方案可以使用，可以看下面参考资料部分。
-这里介绍用mackup，作者应该是用mac的，不过linux也可以使用。
-我用的是manjaro，直接yaourt mackup就安装成功了。
-参考资料关于dotfiles的资料可以参考下面几个链接：
-http://dotfiles.github.iohttps://wiki.archlinux.org/index.php/Dotfileshttps://github.com/kobus-v-schoor/dotgithttps://github.com/lra/mackup用法mackup backup这个命令实际上是做了下面三个步骤：
-cp复制配置文件到你指定用来备份的文件夹rm删除原来的配置文件ln在原来的配置文件处建立链接文件到备份的配置文件mackup uninstall这个命令是用来恢复原来模样，
-rm删除链接文件cp复制备份的配置文件到原来的位置备份文件夹里面已备份的配置文件保留在那里mackup restore这个命令是用来在新电脑里面恢复这些配置用的，例如你用mackup backup做了备份，用U盘复制到另外一台电脑，就可以用mackup restore命令恢复配置，两台电脑的配置就同步了。当然也可以用git来管理。
-mackup支持的保存方式dropboxgoogle drivecopyicloudboxfile_system下面将用file_system的方式做介绍。
-mackup支持直接输入软件名称就可以直接备份相关的配置文件，不需要手动指定配置文件，支持的软件列表可以查看这里：https://github.com/lra/mackup。
-备份指定的配置文件.mackup.cfg文件touch .mackup.cfg建立mackup的配置文件mkdir .mackup建立用于保存自建应用的配置文件cd .mackup &amp;amp;&amp;amp; touch myapp1.</description>
-    </item>
-    
-    <item>
-      <title>About</title>
-      <link>/about/</link>
-      <pubDate>Thu, 05 May 2016 21:48:51 -0700</pubDate>
-      
-      <guid>/about/</guid>
-      <description>This is a &amp;ldquo;hello world&amp;rdquo; example website for the blogdown package. The theme was forked from @jrutheiser/hugo-lithium-theme and modified by Yihui Xie.</description>
-    </item>
-    
-    <item>
-      <title>kylin-ubuntu安装R语言和Rstudio</title>
-      <link>/post/2017-10-15-install-r-rstudio-on-ubuntu/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
-      
-      <guid>/post/2017-10-15-install-r-rstudio-on-ubuntu/</guid>
-      <description>前言在本文你将会了解到在ubuntu打造R语言开发环境的方法。
-主要使用的软件如下：
-Kylin-ubuntu麒麟系统：银河麒麟社区版：下载R语言版本：R version 3.4.1 (2017-06-30)，官网Rstudio：开发版1.1.375 (当时1.1.xxx版本还没发布，看最新版本)texlive2017：下载texlive2017-20170524.iso输入法：小小输入法yong + ibus，下载yong-lin-2.4.0-0.7z修改kylin-ubuntu的安装源参考这里：ubuntu.org.cn中途输了一条这样的代码不知道有没有用
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8D5A09DC9B929006修改sudo vim /etc/apt/sources.list
-把麒麟那几行用#注释掉
-# deb file:///media/kylin/Kylin-4.0.2 juniper main# deb http://cn.archive.ubuntu.com/ubuntu/ main univer multivers restricted# deb http://archive.kylinos.cn/yhkylin/ juniper main restricted universe multiversedeb http://cn.archive.ubuntu.com/ubuntu/ zesty main restricted universe multiversedeb http://cn.archive.ubuntu.com/ubuntu/ zesty-security main restricted universe multiversedeb http://cn.archive.ubuntu.com/ubuntu/ zesty-updates main restricted universe multiversedeb http://cn.</description>
-    </item>
-    
-    <item>
-      <title>Contact</title>
-      <link>/contact/</link>
-      <pubDate>Wed, 09 Apr 2014 00:00:00 +0000</pubDate>
-      
-      <guid>/contact/</guid>
-      <description> First Name  Last Name  E-Mail  City  State AL CA IL      Send   </description>
-    </item>
-    
-  </channel>
-</rss>
