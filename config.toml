@@ -46,12 +46,12 @@ paginate = 10
     weight = 3
     identifier = "about"
     url = "/about/"
-  [[menu.main]]
-    name = "主题"
-    pre = "<i class='fa fa-folder fa-fw'></i>"
-    weight = 4
-    identifier = "topic"
-    url = "/topics/"
+  #[[menu.main]]
+  #  name = "主题"
+  #  pre = "<i class='fa fa-folder fa-fw'></i>"
+  #  weight = 4
+  #  identifier = "topic"
+  #  url = "/topics/"
   [[menu.main]]
     name = "标签"
     pre = "<i class='fa fa-tags fa-fw'></i>"
