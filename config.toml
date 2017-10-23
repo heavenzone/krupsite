@@ -1,4 +1,4 @@
-baseurl = "http://127.0.0.1"
+baseurl = "/"
 languageCode = "en-us"
 title = "HaoGuang's Blog"
 theme = "blackburn-krup"
