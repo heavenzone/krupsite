@@ -7,6 +7,7 @@ copyright = "&copy; 2017. All rights reserved."
 canonifyurls = true
 paginate = 10
 
+
 [indexes]
   tag = "tags"
   topic = "topics"
@@ -21,6 +22,9 @@ paginate = 10
   highlightjs = "androidstudio"
   dateFormat = "02 Jan 2006"
 
+
+  
+  
 [menu]
   # Shown in the side menu.
   [[menu.main]]
@@ -41,6 +45,18 @@ paginate = 10
     weight = 3
     identifier = "about"
     url = "/about/"
+  [[menu.main]]
+    name = "Topics"
+    pre = "<i class='fa fa-folder fa-fw'></i>"
+    weight = 3
+    identifier = "topic"
+    url = "/topics/"
+  [[menu.main]]
+    name = "Tags"
+    pre = "<i class='fa fa-tags fa-fw'></i>"
+    weight = 4
+    identifier = "tag"
+url = "/tags/"
   #[[menu.main]]
   #  name = "Contact"
   #  pre = "<i class='fa fa-phone fa-fw'></i>"
