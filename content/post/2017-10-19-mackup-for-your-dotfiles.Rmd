@@ -1,10 +1,14 @@
 ---
 title: "Mackup for your dotfiles"
 author: "Heaven Zone"
-date: 2017-10-19
+date: "2017-10-19"
 categories: ["Linux"]
 tags: ["mackup", "dotfiles", "linux"]
 ---
+
+```{r setup, include=FALSE}
+
+```
 
 # 简介
 
