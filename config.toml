@@ -1,7 +1,7 @@
 baseurl = "http://127.0.0.1"
 languageCode = "en-us"
 title = "HaoGuang's Blog"
-theme = "blackburn"
+theme = "blackburn-krup"
 author = "HaoGuang"
 copyright = "&copy; 2017. All rights reserved."
 canonifyurls = true
