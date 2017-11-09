@@ -9,6 +9,28 @@ body {
   
 }
 
+.content {
+    padding-left: 2em;
+    padding-right: 2em;
+    margin: 0 auto;
+    max-width: 1000px;
+    margin-bottom: 50px;
+    line-height: 1.6em;
+}
+
+
+p + p {
+  text-indent:2em; 
+}
+
+
+strong {
+  color:#282b2e;
+  margin-left: 2px;
+  margin-right:2px;
+}
+
+
 
 
 
@@ -49,4 +71,28 @@ code, kbd, pre, samp {
 code, kbd, pre, samp {
     font-family: monospace,monospace;
     font-size: 1em;
+}
+
+
+
+blockquote {
+    margin-left: -28px;
+    padding-left: 20px;
+    border-left: 8px solid #333332;
+    font-family: "PT Serif",serif;
+    font-style: italic;
+    transition: all 0.2s ease;
+    color: #333332;
+}
+
+
+/* 列表 */
+
+ol,ul {
+  margin-left:1em;
+  padding-left:1em;
+}
+
+ol + ul {
+  margin-left: 1.5em;
 }
