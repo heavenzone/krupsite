@@ -1,0 +1,52 @@
+
+.doc-main {
+    font-size: 18px;
+    line-height: 1.5;
+}
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #555;
+  
+}
+
+
+
+
+/* 链接 样式*/
+
+a:hover, a:focus {
+    color: #23527c;
+    text-decoration: underline;
+}
+.pure-button:focus, a:active, a:hover {
+    outline: 0;
+}
+a:visited {
+      color: #777ab7;
+}
+a {
+    color: #337ab7;
+    text-decoration: none;
+    background-color: transparent;
+}
+
+
+
+
+/* code */
+
+
+code {
+    padding: 2px 4px;
+    font-size: 90%;
+    color: #c7254e;
+    background-color: #f9f2f4;
+    border-radius: 4px;
+}
+code, kbd, pre, samp {
+    font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+}
+code, kbd, pre, samp {
+    font-family: monospace,monospace;
+    font-size: 1em;
+}
