@@ -9,6 +9,31 @@ body {
   
 }
 
+
+h1 { color:#009999;}
+h2 { color:#336699;} 
+h3 { color:#0099CC;}
+h4 { color:#339999;}
+h5 { color:#CC6699;}
+h6 { color:#FF6666;}
+
+
+.level2 > h2 {
+  margin-left: -28px;
+  border-left: 8px solid #336699;
+  padding-left: 20px;
+}
+h3 {
+  margin-left: -22px;
+  border-left: 5px solid #0099CC;
+  padding-left: 23px;
+}
+h4 {
+  margin-left: -15px;
+  border-left: 3px solid #0099CC;
+  padding-left: 26px;
+}
+
 .content {
     padding-left: 2em;
     padding-right: 2em;
@@ -25,7 +50,7 @@ p + p {
 
 
 strong {
-  color:#282b2e;
+  color:#CC0033;
   margin-left: 2px;
   margin-right:2px;
 }
@@ -37,20 +62,35 @@ strong {
 /* 链接 样式*/
 
 a:hover, a:focus {
-    color: #23527c;
+    color: #FF6666;
     text-decoration: underline;
 }
 .pure-button:focus, a:active, a:hover {
     outline: 0;
 }
 a:visited {
-      color: #777ab7;
+      color: #CC3399;
 }
 a {
-    color: #337ab7;
+    color: #FF6600;
     text-decoration: none;
     background-color: transparent;
 }
+
+#menu a {
+    color: #FF6666;
+    border: none;
+    padding: 0.6em 0 0.6em 0.6em;
+}
+#menu .brand {color: #FF0033;}
+#menu .social a {color: #FF9933;}
+#menu small a {color: #FFFF00;}
+
+header > h2 {
+  padding-left: 1em;
+  border-left: 8px solid #336699;
+}
+
 
 
 
@@ -76,9 +116,9 @@ code, kbd, pre, samp {
 
 
 blockquote {
-    margin-left: -28px;
+    margin: 2em;
     padding-left: 20px;
-    border-left: 8px solid #333332;
+    border: 1px solid #99CCCC;
     font-family: "PT Serif",serif;
     font-style: italic;
     transition: all 0.2s ease;

@@ -103,7 +103,8 @@ sudo ./yong-tool.sh –install64
 可以下载一个**ChmSee**软件来查看压缩包里面的帮助文档**yong.chm**，先安装一些依赖包：
 
 ```
-sudo apt-get install libc6 libchm1 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk2.0-0 libpango1.0-0 libwebkitgtk-1.0-0 libxml2
+sudo apt-get install libc6 libchm1 libgdk-pixbuf2.0-0 libpango1.0-0
+sudo apt-get install libglib2.0-0 libgtk2.0-0 libwebkitgtk-1.0-0 libxml2
 ```
 
 下载libgcrypt11，[点这里下载](http://launchpadlibrarian.net/279485070/libgcrypt11_1.5.3-2ubuntu4.4_amd64.deb)
