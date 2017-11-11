@@ -10,7 +10,7 @@ tags: ["mackup", "dotfiles", "linux"]
 
 ```
 
-# 简介
+## 简介
 
 最近学会了用git管理一些文件，并学会用R blogdown + github + netlify做博客网站，于是想怎么用git来管理linux下面的配置文件呢？那么多配置文件在不同文件夹，岂不是要建很多个repo？也想到把配置文件全部放在一个文件夹，然后做链接，但是操作起来还是比较麻烦，百度了一下，发现还真的有不少的方案可以使用，可以看下面参考资料部分。
 
@@ -18,7 +18,7 @@ tags: ["mackup", "dotfiles", "linux"]
 
 我用的是manjaro，直接`yaourt mackup`就安装成功了。
 
-# 参考资料
+## 参考资料
 
 关于dotfiles的资料可以参考下面几个链接：
 
@@ -28,7 +28,7 @@ tags: ["mackup", "dotfiles", "linux"]
 - <https://github.com/lra/mackup>
 
 
-# 用法
+## 用法
 
 - `mackup backup`
 
@@ -51,7 +51,7 @@ tags: ["mackup", "dotfiles", "linux"]
 这个命令是用来在新电脑里面恢复这些配置用的，例如你用`mackup backup`做了备份，用U盘复制到另外一台电脑，就可以用`mackup restore`命令恢复配置，两台电脑的配置就同步了。当然也可以用git来管理。
 
 
-# mackup支持的保存方式
+## mackup支持的保存方式
 
 - dropbox
 - google drive
@@ -65,9 +65,9 @@ tags: ["mackup", "dotfiles", "linux"]
 mackup支持直接输入软件名称就可以直接备份相关的配置文件，不需要手动指定配置文件，支持的软件列表可以查看这里：<https://github.com/lra/mackup>。
 
 
-# 备份指定的配置文件
+## 备份指定的配置文件
 
-## `.mackup.cfg`文件
+### `.mackup.cfg`文件
 
 - `touch .mackup.cfg`建立mackup的配置文件
 - `mkdir .mackup`建立用于保存自建应用的配置文件
@@ -90,7 +90,7 @@ bash
 myapp2
 ```
 
-### storage：储存方式
+#### storage：储存方式
 
 `engine`是用来设置储存方式的，你可以用dropbox等网盘，不过支持的基本都是国外的，所以我们这里使用file_system方式。
 
@@ -99,20 +99,20 @@ myapp2
 `directory`设置保存配置文件的文件夹，这个文件夹将会在设置的path下生成，默认是Mackup。
 
 
-### applications_to_sync：同步的应用
+#### applications_to_sync：同步的应用
 
 这部分可以直接输入mackup默认支持的应用名称，例如`bash`，当然也可以到这里查看详细列表，链接：<https://github.com/lra/mackup>。
 
 上面myapp1是按照`.mackup`文件夹下面的`myapp1.cfg`的文件名来输入的，不要扩展名`.cfg`。
 
-### applications_to_ignore：忽略的应用
+#### applications_to_ignore：忽略的应用
 
 这里忽略的应用的写法跟**同步的应用**部分一样。
 
 
 这个时候可以输入`mackup list`查看到myapp1和myapp2已经在列表中了。
 
-## 测试mackup
+### 测试mackup
 
 - 在`~/`下面建立测试文件夹和文件
 
@@ -159,4 +159,4 @@ $ mackup restore
 
 最后就是用git管理备份文件夹了。
 
-Enjoy!
+**Enjoy**!
