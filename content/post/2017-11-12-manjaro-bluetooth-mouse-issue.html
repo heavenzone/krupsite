@@ -1,0 +1,89 @@
+---
+title: "Manjaro蓝牙连接鼠标突然有问题了"
+author: "Heaven Zone"
+date: "2017-11-12"
+categories: ["Linux"]
+tags: ["linux", "arch", "manjaro", "bluetooth"]
+---
+
+
+
+<div class="section level2">
+<h2>问题描述</h2>
+<p>之前通过dell笔记本自带的蓝牙连接惠普蓝牙鼠标一直都是好好的，不知道为什么今天（2017.11.12）突然不能连接了。</p>
+<p>忘了昨天晚上是不是升级过系统了( manjaro-i3 )。</p>
+</div>
+<div class="section level2">
+<h2>问题检查</h2>
+<p>双击状态栏的蓝牙图标打开blueman-applet，然后点击<code>查找</code>，发现下面出现文字<em>Resource Not Ready..</em>字样，然后bing搜索，发现manjaro官方论坛也有人出现这种问题，他们还讨论了很久才有人发现了问题所在。</p>
+<p>再用命令<code>systemctl status bluetooth.service</code>查看一下：</p>
+<pre><code>$ systemctl status bluetooth.service
+● bluetooth.service - Bluetooth service
+   Loaded: loaded (/usr/lib/systemd/system/bluetooth.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sun 2017-11-12 15:55:19 CST; 7min ago
+     Docs: man:bluetoothd(8)
+ Main PID: 357 (bluetoothd)
+   Status: &quot;Running&quot;
+    Tasks: 1 (limit: 4915)
+   CGroup: /system.slice/bluetooth.service
+           └─357 /usr/lib/bluetooth/bluetoothd
+
+11月 12 15:55:19 heaven-dell systemd[1]: Starting Bluetooth service...
+11月 12 15:55:19 heaven-dell bluetoothd[357]: Bluetooth daemon 5.47
+11月 12 15:55:19 heaven-dell bluetoothd[357]: Starting SDP server
+11月 12 15:55:19 heaven-dell bluetoothd[357]: Bluetooth management interface 1.14 initialized
+11月 12 15:55:19 heaven-dell systemd[1]: Started Bluetooth service.
+11月 12 15:55:27 heaven-dell bluetoothd[357]: Endpoint registered: sender=:1.34 path=/MediaEndpoint/A2DPSource
+11月 12 15:55:27 heaven-dell bluetoothd[357]: Endpoint registered: sender=:1.34 path=/MediaEndpoint/A2DPSink
+11月 12 15:55:39 heaven-dell bluetoothd[357]: Failed to set mode: Failed (0x03)</code></pre>
+</div>
+<div class="section level2">
+<h2>问题所在</h2>
+<p>看了manjaro论坛的<a href="https://forum.manjaro.org/t/bluetooth-adapter-cannot-be-turned-on-realtek-rtl8723be/10130/32">这篇帖子</a>发现是tlp的电源管理影响了蓝牙的连接。</p>
+</div>
+<div class="section level2">
+<h2>解决方法</h2>
+<div id="tlp" class="section level3">
+<h3>卸载tlp</h3>
+<p>其实卸载tlp就可以解决了，但是该帖子也不建议我们那样做，tlp是可以管理我们的笔记本电源的。</p>
+<p>卸载tlp测试一下。</p>
+<pre><code>sudo pacman -R tlp</code></pre>
+<p>重启，发现蓝牙鼠标<strong>正常</strong>自动连接了，确定问题是tlp电源管理影响了蓝牙的连接。</p>
+<p>上面提到的帖子有大神示意可以修改tlp配置文件/etc/default/tlp来关闭对蓝牙的管理就可以解决问题，也有很多manjaro玩家用这个方法解决了问题，但是我用<code>lsusb</code>来查看设备，不知道哪个才是dell的蓝牙设备。</p>
+<p>试试安装hcitool包看看。</p>
+</div>
+<div id="hcitool" class="section level3">
+<h3>安装hcitool</h3>
+<pre><code>$ yaourt hcitool
+
+$ hcitool dev
+Devices:
+    hci0    D4:6A:6A:65:2F:94</code></pre>
+<p>再重新安装tlp，重启，蓝牙不能连接。</p>
+<p>尝试把用<code>hcitool dev</code>命令查出来的mac地址后面8位添加到<code>/etc/default/tlp</code>配置文件看看吧，</p>
+<p>修改<code>/etc/default/tlp</code>找到`#USB_BLACKLIST=“1111:2222 3333:4444”这一行，然后修改成：</p>
+<pre><code>USB_BLACKLIST=&quot;6a65:2f94&quot;</code></pre>
+<p>重启，没用。</p>
+</div>
+<div class="section level3">
+<h3>成功的方法</h3>
+<p>用命令<code>tlp stat</code>查看了一下，发现有一段是这样的：</p>
+<pre><code>+++ USB
+Autosuspend         = enabled
+Device whitelist    = (not configured)
+Device blacklist    = (not configured)
+Bluetooth blacklist = disabled
+Phone blacklist     = disabled
+WWAN blacklist      = enabled</code></pre>
+<p>我想，如果把<code>Bluetooth blacklist = disabled</code>改成<strong>enabled</strong>是不是就可以了呢？</p>
+<p>实践证明这是对的：</p>
+<p>修改<code>/etc/default/tlp</code>，找到行<code>USB_BLACKLIST_BTUSB=0</code>，把<code>0</code>改为<code>1</code>，重启电脑，马上就可以自动连接蓝牙鼠标了。</p>
+<p>问题解决！</p>
+</div>
+</div>
+<div class="section level2">
+<h2>参考资料</h2>
+<ul>
+<li><a href="https://forum.manjaro.org/t/bluetooth-adapter-cannot-be-turned-on-realtek-rtl8723be/10130/32" class="uri">https://forum.manjaro.org/t/bluetooth-adapter-cannot-be-turned-on-realtek-rtl8723be/10130/32</a></li>
+</ul>
+</div>
