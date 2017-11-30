@@ -1,9 +1,14 @@
 ---
-title: "Manjaro蓝牙连接鼠标突然有问题了"
-author: "Heaven Zone"
+title: Manjaro蓝牙连接鼠标突然有问题了
+author: Heaven Zone
 date: "2017-11-12"
-categories: ["Linux"]
-tags: ["linux", "arch", "manjaro", "bluetooth"]
+categories: 
+  - Linux
+tags: 
+  - linux
+  - arch
+  - manjaro
+  - bluetooth
 ---
 
 
