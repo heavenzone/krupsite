@@ -1,6 +1,13 @@
 ---
-title: "About"
-date: "2016-05-05T21:48:51-07:00"
+title: "关于本站"
+date: "2017-10-05"
 ---
 
-This is a "hello world" example website for the [**blogdown**](https://github.com/rstudio/blogdown) package. The theme was forked from [@jrutheiser/hugo-lithium-theme](https://github.com/jrutheiser/hugo-lithium-theme) and modified by [Yihui Xie](https://github.com/yihui/hugo-lithium-theme).
+这么说吧，如果没有在接触R语言的过程中遇到Yihui大神，没有Yihui大神贡献的各种神包，就不会有本网站的出现。
+
+本网站主要记录自己学习R语言和一些技术方面的笔记吧。
+
+感谢Yihui！
+
+- [**blogdown**](https://github.com/rstudio/blogdown)
+- [**Yihui Xie**](https://github.com/yihui/hugo-lithium-theme) Blog

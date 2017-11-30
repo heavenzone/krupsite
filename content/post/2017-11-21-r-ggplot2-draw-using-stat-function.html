@@ -1,0 +1,196 @@
+---
+title: 用ggplot2对数学函数进行画图
+author: Heaven Zone
+date: '2017-11-21'
+slug: r-ggplot2-draw-using-stat-function
+categories:
+  - R
+tags:
+  - R
+  - ggplot2
+description: '怎么对正态分布函数填充拒绝区域?'
+---
+
+
+
+<div class="section level2">
+<h2>前言</h2>
+<p>学了一段时间的R和ggplot2，一直很想知道书中那些正态分布图两侧的拒绝域是怎么填充颜色的，找到这篇文章<a href="http://t-redactyl.io/blog/2016/03/creating-plots-in-r-using-ggplot2-part-9-function-plots.html">Creating plots in R using ggplot2 - part 9: function plots</a>之后才理清了思路。</p>
+</div>
+<div class="section level2">
+<h2>基础正态分布曲线</h2>
+<p>首先我们一个ggplot基础layer，x轴范围在[-4, 4]（当然你可以设置任何你想设置的范围），然后把这个范围值传递给aes的x，然后我们添加<code>stat_function</code>选项，然后把函数dnorm传给stat_function的fun参数，这样我们就可以画出一条漂亮的正态分布曲线了。</p>
+<pre class="r"><code>require(ggplot2)
+ggplot(data.frame(x = c(-4, 4)), aes(x = x)) +
+  stat_function(fun = dnorm)</code></pre>
+<p><img src="/post/2017-11-21-r-ggplot2-draw-using-stat-function_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+</div>
+<div id="t" class="section level2">
+<h2>基础t分布曲线</h2>
+<p><strong>stat_function</strong>可以画很多连续型的概率密度函数，包括t(dt)，F(df)和Chi-square(dchisq)等等。现在我们这里再画一个t分布函数曲线图，t分布曲线的形状取决于自由度，所以我们需要指定自由度的值给<code>df</code>参数，然后传递给dt函数。</p>
+<pre class="r"><code>ggplot(data.frame(x = c(-4,4)), aes(x = x)) +
+  stat_function(fun = dt, args = list(df = 8))</code></pre>
+<p><img src="/post/2017-11-21-r-ggplot2-draw-using-stat-function_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+</div>
+<div class="section level2">
+<h2>画我们自己的函数曲线</h2>
+<p>我们也可以画我们自己的函数，我们只需要通过公式将x值计算出y值。</p>
+<pre class="r"><code>cubeFun &lt;- function(x) {
+  x^3 * 0.5
+}
+
+ggplot(data.frame(x = c(-4, 4)), aes(x = x)) +
+  stat_function(fun = cubeFun)</code></pre>
+<p><img src="/post/2017-11-21-r-ggplot2-draw-using-stat-function_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>我们再尝试画一条中学时代的函数曲线</p>
+<pre class="r"><code>xsquare &lt;- function(x) {
+  x^2
+}
+
+ggplot(data.frame(x = c(-5, 10)), aes(x = x)) +
+  stat_function(fun = xsquare)</code></pre>
+<p><img src="/post/2017-11-21-r-ggplot2-draw-using-stat-function_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div class="section level2">
+<h2>同一个图片画多个函数曲线</h2>
+<p>要画多条曲线到同一个图片上，只需要添加多个stat_function就可以了。下面我们分别画两条正态分布曲线，一条定义好均值为0.2，标准差为0.1，另外一条的均值是0.7，标准差为0.05(因为<strong>dnorm</strong>函数默认是均值为0，标准差为1的，所以我们第一个图并没有指定均值和标准差画出来的就是标准正态分布曲线。)，我们也可以把x轴的范围变成0到1之间。</p>
+<pre class="r"><code>ggplot(data.frame(x = c(0, 1)), aes(x = x)) +
+  stat_function(fun = dnorm, args = list(0.2, 0.1)) +
+  stat_function(fun = dnorm, args = list(0.7, 0.05))</code></pre>
+<p><img src="/post/2017-11-21-r-ggplot2-draw-using-stat-function_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>我们再拿中学时代的正弦余弦曲线画在一张图上</p>
+<pre class="r"><code>ggplot(data.frame(x = c(-5, 5)), aes(x = x)) +
+  stat_function(fun = sin) +
+  stat_function(fun = cos)</code></pre>
+<p><img src="/post/2017-11-21-r-ggplot2-draw-using-stat-function_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+<div class="section level2">
+<h2>装饰图片</h2>
+<ul>
+<li>接着我们用scale_x_continuous和scale_y_continuous来修改坐标轴的标题，用我们需要用的坐标轴名字对参数name赋值。</li>
+<li>我们还要修改一下坐标轴刻度，我们让x轴的刻度间隔变成0.2，这里用到scale_x_continuous的参数breaks，我们对breaks赋值<code>breaks = seq(0, 1, 0.2)</code>。</li>
+<li>我们还可以用参数limits来控制x轴的显示范围，这里我们对limits赋值：<code>limits = c(0, 1)</code>。</li>
+<li>当然我们还要用ggtitle来对图片添加一个醒目的标题。</li>
+<li>还可以通过<code>aes(colour = )</code>来修改曲线的颜色。</li>
+<li>这里我们<strong>通过不同的曲线颜色来添加图例</strong>，重点要学习这一条。</li>
+<li>还可以修改曲线的粗细。</li>
+</ul>
+<p>下面上代码把上面几条需求一起做了：</p>
+<pre class="r"><code>ggplot(data.frame(x = c(0, 1)), aes(x = x)) +
+  stat_function(fun = dnorm, args = list(0.2, 0.1), 
+                aes(colour = &quot;Group 1&quot;), size = 1.5) +
+  stat_function(fun = dnorm, args = list(0.7, 0.05), 
+                aes(colour = &quot;Group 2&quot;), size = 1.5) +
+  scale_x_continuous(name = &quot;Probability&quot;,
+                      breaks = seq(0, 1, 0.2),
+                      limits=c(0, 1)) +
+  scale_y_continuous(name = &quot;Frequency&quot;) +
+  ggtitle(&quot;Normal function curves of probabilities中文&quot;) +
+  scale_colour_brewer(palette=&quot;Accent&quot;) +
+  labs(colour = &quot;Groups&quot;)</code></pre>
+<p><img src="/post/2017-11-21-r-ggplot2-draw-using-stat-function_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
+<div id="xkcd" class="section level2">
+<h2>创建XKCD风格的图表</h2>
+<p>当然，我们也可以创建属于我们自己的主题样式，ggplot2给我们很高的自由度来自定义自己的图表样式，包括使用不同的字体，下面例子讲展示一个XKCD风格的图表。要做这个XKCD风格的图表，我们要先安装包<code>extrafont</code>，然后导入XKCD字体。</p>
+<p>我写这一篇文章的时候用的是win10，把字体复制到win10系统字体文件夹，对参考资料链接文章的代码做了些修改才达到效果。</p>
+<p>上码：</p>
+<pre class="r"><code>library(extrafont)
+download.file(&quot;http://simonsoftware.se/other/xkcd.ttf&quot;,
+              dest=&quot;xkcd.ttf&quot;, mode=&quot;wb&quot;)
+font_import(paths = &quot;./&quot;, pattern=&quot;[X/x]kcd&quot;)
+fonts()
+loadfonts()</code></pre>
+<p>ok，导入字体之后我们就可以画图了：</p>
+<pre class="r"><code>windowsFonts(xkcd = windowsFont(family = &quot;xkcd&quot;))
+ggplot(data.frame(x = c(0, 1)), aes(x = x)) +
+    stat_function(fun = dnorm, args = list(0.2, 0.1),
+                  aes(colour = &quot;Group 1&quot;), size = 1.5) +
+    stat_function(fun = dnorm, args = list(0.7, 0.05),
+                  aes(colour = &quot;Group 2&quot;), size = 1.5) +
+    scale_x_continuous(name = &quot;Probability&quot;,
+                          breaks = seq(0, 1, 0.2),
+                          limits=c(0, 1)) +
+    scale_y_continuous(name = &quot;Frequency&quot;) +
+    ggtitle(&quot;Normal function curves of probabilities&quot;) +
+    scale_colour_brewer(palette=&quot;Set1&quot;) +
+    labs(colour = &quot;Groups&quot;) +
+    theme(axis.line = element_line(size=1, colour = &quot;black&quot;),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.border = element_blank(),
+          panel.background = element_blank(),
+          plot.title=element_text(size = 20, family=&quot;xkcd&quot;),
+          text=element_text(size = 16, family=&quot;xkcd&quot;),
+          axis.text.x=element_text(colour=&quot;black&quot;, size = 12),
+          axis.text.y=element_text(colour=&quot;black&quot;, size = 12),
+          legend.position = &quot;bottom&quot;)</code></pre>
+<p><img src="/post/2017-11-21-r-ggplot2-draw-using-stat-function_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+<div class="section level2">
+<h2>在曲线下面添加区域颜色</h2>
+<p>一般情况下我们并不会曲线全部下面都添加颜色，而只是其中一部分，要添加部分区域颜色，重点是要控制x轴的范围，因此我们要自定义一个函数用来控制这个范围，我们还用到了geom参数，并把它设置为<strong>area</strong>，为了实现透明效果我们也可以设置alpha参数。</p>
+<p>上码(这里我简化了一下原来的代码)：</p>
+<pre class="r"><code>funcShaded &lt;- function(x) {
+    y &lt;- dnorm(x, mean = 0.2, sd = 0.1)
+    y[x &lt; 0.2 | x &gt; (0.2 + 4 * 0.1)] &lt;- NA
+    return(y)
+}
+
+ggplot(data.frame(x = c(0, 1)), aes(x = x)) +
+    stat_function(fun = dnorm, args = list(0.2, 0.1)) +
+  stat_function(fun = funcShaded, geom = &quot;area&quot;,
+                fill = &quot;#84CA72&quot;, alpha = 0.2)</code></pre>
+<p><img src="/post/2017-11-21-r-ggplot2-draw-using-stat-function_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+<div class="section level2">
+<h2>在标准正态分布函数两侧填充拒绝域</h2>
+<p>在看统计学书中的分布图，经常会把某个区域填充颜色，学了ggplot2一段时间也没搞懂究竟怎么搞，现在终于学到一点技巧了，原来要用到<strong>stat_function</strong>，然后把参数<strong>geom</strong>参数设置为<strong>area</strong>，还要自定义一个函数来控制填充区域在x轴上的范围。</p>
+<p>我们对上面的funcShaded函数做一点改进，上码：</p>
+<pre class="r"><code>funcShaded2 &lt;- function(x, mean = 0, sd = 1, min, max) {
+    y &lt;- dnorm(x, mean = mean, sd = sd)
+    y[x &lt; min | x &gt; max] &lt;- NA
+    return(y)
+}
+
+x.mu &lt;- 0
+x.sd &lt;- 1
+
+ggplot(data.frame(x = c(-4, 4)), aes(x = x)) +
+    stat_function(fun = dnorm, args = list(x.mu,x.sd)) +
+  stat_function(fun = funcShaded2, geom = &quot;area&quot;,
+                fill = &quot;#84CA72&quot;, alpha = 0.2,
+                args = list(mean = x.mu, sd = x.sd, min = -1, max = 1)) +
+  stat_function(fun = funcShaded2, geom = &quot;area&quot;,
+                fill = &quot;red&quot;, alpha = 0.3,
+                args = list(mean = x.mu, sd = x.sd, min = -Inf, max = -1.96)) +
+  stat_function(fun = funcShaded2, geom = &quot;area&quot;,
+                fill = &quot;red&quot;, alpha = 0.3,
+                args = list(mean = x.mu, sd = x.sd, min = 1.96, max = Inf))</code></pre>
+<p><img src="/post/2017-11-21-r-ggplot2-draw-using-stat-function_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+</div>
+<div class="section level2">
+<h2>在非标准正态分布函数两侧填充拒绝域</h2>
+<p>如果要对非标准正态分布曲线两侧填充拒绝域，我们可以通过<strong>qnorm</strong>函数计算出0.95的置信区间的x值。</p>
+<pre class="r"><code>x.mu &lt;- 2
+x.sd &lt;- 3
+
+xleft &lt;- qnorm(0.025,mean = x.mu, sd = x.sd)
+xright &lt;- qnorm(0.975,mean = x.mu, sd = x.sd)
+
+ggplot(data.frame(x = c(xleft - 1, xright + 1)), aes(x = x)) +
+    stat_function(fun = dnorm, args = list(x.mu,x.sd)) +
+  stat_function(fun = funcShaded2, geom = &quot;area&quot;,
+                fill = &quot;red&quot;, alpha = 0.3,
+                args = list(mean = x.mu, sd = x.sd, min = -Inf, max = xleft)) +
+  stat_function(fun = funcShaded2, geom = &quot;area&quot;,
+                fill = &quot;red&quot;, alpha = 0.3,
+                args = list(mean = x.mu, sd = x.sd, min = xright, max = Inf))</code></pre>
+<p><img src="/post/2017-11-21-r-ggplot2-draw-using-stat-function_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
+<div class="section level2">
+<h2>参考资料</h2>
+<ul>
+<li><a href="http://t-redactyl.io/blog/2016/03/creating-plots-in-r-using-ggplot2-part-9-function-plots.html" class="uri">http://t-redactyl.io/blog/2016/03/creating-plots-in-r-using-ggplot2-part-9-function-plots.html</a></li>
+</ul>
+</div>
