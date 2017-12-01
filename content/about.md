@@ -11,3 +11,9 @@ date: "2017-10-05"
 
 - [**blogdown**](https://github.com/rstudio/blogdown)
 - [**Yihui Xie**](https://github.com/yihui/hugo-lithium-theme) Blog
+
+
+## 更新历史
+
+- 2017-11-30 注册了自己名字的全拼域名zhonghaoguang.com，并接入到了netlify.com系统
+
