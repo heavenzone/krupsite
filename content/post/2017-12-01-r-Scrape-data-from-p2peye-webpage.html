@@ -1,0 +1,633 @@
+---
+title: 用R语言爬p2peye数据中心进行数据分析
+author: Heaven Zone
+date: '2017-12-02'
+slug: r-Scrape-data-from-p2peye-webpage
+categories:
+  - R
+tags:
+  - R
+  - 爬虫
+description: '用R语言的html_table爬p2peye，做雷达图数据分析'
+---
+
+
+
+<div id="p2p" class="section level2">
+<h2>P2P网贷公司数据分析</h2>
+<p>为了测试R语言的爬虫功能，下面将对网页http://www.p2peye.com 数据中心页面进行数据抓取，对<strong>团贷网</strong>和该网站提供的600多家公司之间进行数据分析。</p>
+<p>现在日期是：2017年12月02日</p>
+</div>
+<div class="section level2">
+<h2>昨日数据分析</h2>
+<div class="section level3">
+<h3>获取数据</h3>
+<pre class="r"><code>url &lt;- &quot;http://www.p2peye.com/shuju/ptsj/&quot;
+webpageTable &lt;- url %&gt;% read_html() %&gt;% # html_nodes(css =&#39;#platdata&#39;) %&gt;%
+html_table()
+
+p2pdata &lt;- as_tibble(webpageTable[[2]])
+names(p2pdata) &lt;- names(webpageTable[[1]])
+p2pdata$操作 &lt;- NULL</code></pre>
+</div>
+<div class="section level3">
+<h3>查看数据结构</h3>
+<pre class="r"><code>knitr::kable(head(p2pdata))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="center">排序</th>
+<th align="left">平台名称</th>
+<th align="left">成交额</th>
+<th align="left">综合利率</th>
+<th align="left">投资人</th>
+<th align="left">借款周期</th>
+<th align="left">借款人</th>
+<th align="left">满标速度</th>
+<th align="left">累计贷款余额</th>
+<th align="left">资金净流入</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">1</td>
+<td align="left">微贷网</td>
+<td align="left">39830.25万</td>
+<td align="left">7.56%</td>
+<td align="left">14762人</td>
+<td align="left">3.52月</td>
+<td align="left">11470人</td>
+<td align="left">0.33分钟</td>
+<td align="left">1779632.23万</td>
+<td align="left">1311.22万</td>
+</tr>
+<tr class="even">
+<td align="center">2</td>
+<td align="left">宜人贷</td>
+<td align="left">19837.69万</td>
+<td align="left">11.68%</td>
+<td align="left">95750人</td>
+<td align="left">31.01月</td>
+<td align="left">3020人</td>
+<td align="left">1.73分钟</td>
+<td align="left">4830656.16万</td>
+<td align="left">0万</td>
+</tr>
+<tr class="odd">
+<td align="center">3</td>
+<td align="left">你我贷</td>
+<td align="left">17598.82万</td>
+<td align="left">10.81%</td>
+<td align="left">41565人</td>
+<td align="left">18.68月</td>
+<td align="left">29893人</td>
+<td align="left">2.09分钟</td>
+<td align="left">1734631.18万</td>
+<td align="left">-3242.61万</td>
+</tr>
+<tr class="even">
+<td align="center">4</td>
+<td align="left">爱钱进</td>
+<td align="left">13939.45万</td>
+<td align="left">10.3%</td>
+<td align="left">10360人</td>
+<td align="left">31.40月</td>
+<td align="left">3771人</td>
+<td align="left">1.81分钟</td>
+<td align="left">3766398.8万</td>
+<td align="left">9623.5万</td>
+</tr>
+<tr class="odd">
+<td align="center">5</td>
+<td align="left">小牛在线</td>
+<td align="left">13220.18万</td>
+<td align="left">9.47%</td>
+<td align="left">16428人</td>
+<td align="left">4.55月</td>
+<td align="left">1110人</td>
+<td align="left">156.91分钟</td>
+<td align="left">1322647.57万</td>
+<td align="left">-315.81万</td>
+</tr>
+<tr class="even">
+<td align="center">6</td>
+<td align="left">陆金服</td>
+<td align="left">11951.72万</td>
+<td align="left">8.47%</td>
+<td align="left">7511人</td>
+<td align="left">33.29月</td>
+<td align="left">4028人</td>
+<td align="left">0.00分钟</td>
+<td align="left">15885548.05万</td>
+<td align="left">0万</td>
+</tr>
+</tbody>
+</table>
+<p>记录10列数据的描述：</p>
+<ul>
+<li>排序<br />
+</li>
+<li>平台名称</li>
+<li>成交额（万元）</li>
+<li>综合利率（%）</li>
+<li>投资人（人）</li>
+<li>借款周期（月）</li>
+<li>借款人（人）</li>
+<li>满标速度（分钟）</li>
+<li>累计贷款余额（万元）</li>
+<li>资金净流入（万元）</li>
+</ul>
+</div>
+<div class="section level3">
+<h3>数据整理</h3>
+<pre class="r"><code>tmpdata &lt;- p2pdata
+# 去除数据中多余文字
+tmp1 &lt;- c(3:10)
+tmpdata[, tmp1] &lt;- select(tmpdata, tmp1) %&gt;% transmute_all(function(.) {
+    gsub(&quot;([万])|([人])|([月])|([分钟])|([%])&quot;, &quot;&quot;, .)
+})
+
+# 将文本类型的数字转化成数字类型
+tmpdata[, 3:10] &lt;- select(tmpdata, 3:10) %&gt;% sapply(as.numeric)
+
+# 将利率用小数表示
+tmpdata$综合利率 &lt;- tmpdata$综合利率/100
+
+tmpdata &lt;- mutate(tmpdata, group = ifelse(平台名称 == &quot;团贷网&quot;, &quot;团贷网&quot;, &quot;其他&quot;))
+tmpdata$平台名称 &lt;- reorder(tmpdata$平台名称, tmpdata$成交额)
+
+# 再查看整理好的数据结构
+knitr::kable(head(tmpdata))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="center">排序</th>
+<th align="left">平台名称</th>
+<th align="center">成交额</th>
+<th align="center">综合利率</th>
+<th align="center">投资人</th>
+<th align="center">借款周期</th>
+<th align="center">借款人</th>
+<th align="center">满标速度</th>
+<th align="center">累计贷款余额</th>
+<th align="center">资金净流入</th>
+<th align="left">group</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">1</td>
+<td align="left">微贷网</td>
+<td align="center">39830.25</td>
+<td align="center">0.0756</td>
+<td align="center">14762</td>
+<td align="center">3.52</td>
+<td align="center">11470</td>
+<td align="center">0.33</td>
+<td align="center">1779632</td>
+<td align="center">1311.22</td>
+<td align="left">其他</td>
+</tr>
+<tr class="even">
+<td align="center">2</td>
+<td align="left">宜人贷</td>
+<td align="center">19837.69</td>
+<td align="center">0.1168</td>
+<td align="center">95750</td>
+<td align="center">31.01</td>
+<td align="center">3020</td>
+<td align="center">1.73</td>
+<td align="center">4830656</td>
+<td align="center">0.00</td>
+<td align="left">其他</td>
+</tr>
+<tr class="odd">
+<td align="center">3</td>
+<td align="left">你我贷</td>
+<td align="center">17598.82</td>
+<td align="center">0.1081</td>
+<td align="center">41565</td>
+<td align="center">18.68</td>
+<td align="center">29893</td>
+<td align="center">2.09</td>
+<td align="center">1734631</td>
+<td align="center">-3242.61</td>
+<td align="left">其他</td>
+</tr>
+<tr class="even">
+<td align="center">4</td>
+<td align="left">爱钱进</td>
+<td align="center">13939.45</td>
+<td align="center">0.1030</td>
+<td align="center">10360</td>
+<td align="center">31.40</td>
+<td align="center">3771</td>
+<td align="center">1.81</td>
+<td align="center">3766399</td>
+<td align="center">9623.50</td>
+<td align="left">其他</td>
+</tr>
+<tr class="odd">
+<td align="center">5</td>
+<td align="left">小牛在线</td>
+<td align="center">13220.18</td>
+<td align="center">0.0947</td>
+<td align="center">16428</td>
+<td align="center">4.55</td>
+<td align="center">1110</td>
+<td align="center">156.91</td>
+<td align="center">1322648</td>
+<td align="center">-315.81</td>
+<td align="left">其他</td>
+</tr>
+<tr class="even">
+<td align="center">6</td>
+<td align="left">陆金服</td>
+<td align="center">11951.72</td>
+<td align="center">0.0847</td>
+<td align="center">7511</td>
+<td align="center">33.29</td>
+<td align="center">4028</td>
+<td align="center">0.00</td>
+<td align="center">15885548</td>
+<td align="center">0.00</td>
+<td align="left">其他</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level3">
+<h3>团贷网昨日成交额的排名</h3>
+<pre class="r"><code>gdata &lt;- select(tmpdata, c(&quot;平台名称&quot;, &quot;成交额&quot;, &quot;group&quot;)) %&gt;% arrange(desc(成交额))
+
+gdata %&gt;% head(10) %&gt;% ggplot(aes(reorder(平台名称, 成交额), 成交额, fill = group)) + 
+    geom_bar(stat = &quot;identity&quot;) + coord_flip() + geom_text(aes(x = 平台名称, 
+    y = 成交额 * 0.8, label = sprintf(&quot;%2.0f&quot;, 成交额)), color = &quot;#008899&quot;) + 
+    ggtitle(&quot;昨日成交额排名&quot;) + xlab(label = &quot;平台名称&quot;)</code></pre>
+<p><img src="/post/2017-12-01-r-Scrape-data-from-p2peye-webpage_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>数据显示，团贷网昨日交易额为<strong>0</strong>万元，排名为第<strong>410</strong>名。</p>
+</div>
+</div>
+<div id="7" class="section level2">
+<h2>最近7天交易数据分析</h2>
+<div class="section level3">
+<h3>获取近七天交易数据</h3>
+<p>接着我们再看看最近7天的数据吧。</p>
+<pre class="r"><code>url7 &lt;- &quot;http://www.p2peye.com/shuju/ptsj_week/&quot;
+webpageTable &lt;- url7 %&gt;% read_html() %&gt;% # html_nodes(css =&#39;#platdata&#39;) %&gt;%
+html_table()
+p2pdata7 &lt;- as_tibble(webpageTable[[2]])
+names(p2pdata7) &lt;- names(webpageTable[[1]])
+p2pdata7$操作 &lt;- NULL
+tmpdata7 &lt;- p2pdata7
+# 去除数据中多余文字
+tmp1 &lt;- c(3:10)
+tmpdata7[, tmp1] &lt;- select(tmpdata7, tmp1) %&gt;% transmute_all(function(.) {
+    gsub(&quot;([万])|([人])|([月])|([分钟])|([%])&quot;, &quot;&quot;, .)
+})
+tmpdata7[, 3:10] &lt;- select(tmpdata7, 3:10) %&gt;% sapply(as.numeric)
+tmpdata7$综合利率 &lt;- tmpdata7$综合利率/100
+tmpdata7 &lt;- mutate(tmpdata7, group = ifelse(平台名称 == &quot;团贷网&quot;, &quot;团贷网&quot;, 
+    &quot;其他&quot;))
+tmpdata7$平台名称 &lt;- reorder(tmpdata7$平台名称, tmpdata7$成交额)</code></pre>
+</div>
+<div id="7" class="section level3">
+<h3>查看最近7天数据</h3>
+<pre class="r"><code>knitr::kable(head(tmpdata7))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="center">排序</th>
+<th align="left">平台名称</th>
+<th align="center">成交额</th>
+<th align="center">综合利率</th>
+<th align="center">投资人</th>
+<th align="center">借款周期</th>
+<th align="center">借款人</th>
+<th align="center">满标速度</th>
+<th align="center">累计贷款余额</th>
+<th align="center">资金净流入</th>
+<th align="left">group</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">1</td>
+<td align="left">微贷网</td>
+<td align="center">196256.6</td>
+<td align="center">0.0731</td>
+<td align="center">73296</td>
+<td align="center">3.22</td>
+<td align="center">254926</td>
+<td align="center">3.91</td>
+<td align="center">1779632</td>
+<td align="center">-462.34</td>
+<td align="left">其他</td>
+</tr>
+<tr class="even">
+<td align="center">2</td>
+<td align="left">陆金服</td>
+<td align="center">187368.4</td>
+<td align="center">0.0853</td>
+<td align="center">50383</td>
+<td align="center">34.64</td>
+<td align="center">34163</td>
+<td align="center">0.00</td>
+<td align="center">15885548</td>
+<td align="center">37699.57</td>
+<td align="left">其他</td>
+</tr>
+<tr class="odd">
+<td align="center">3</td>
+<td align="left">红岭创投</td>
+<td align="center">179119.7</td>
+<td align="center">0.0811</td>
+<td align="center">45884</td>
+<td align="center">1.68</td>
+<td align="center">4913</td>
+<td align="center">12.72</td>
+<td align="center">2061098</td>
+<td align="center">-60919.29</td>
+<td align="left">其他</td>
+</tr>
+<tr class="even">
+<td align="center">4</td>
+<td align="left">团贷网</td>
+<td align="center">127860.9</td>
+<td align="center">0.0896</td>
+<td align="center">113357</td>
+<td align="center">7.84</td>
+<td align="center">9215</td>
+<td align="center">0.91</td>
+<td align="center">1336779</td>
+<td align="center">19055.50</td>
+<td align="left">团贷网</td>
+</tr>
+<tr class="odd">
+<td align="center">5</td>
+<td align="left">宜人贷</td>
+<td align="center">113192.5</td>
+<td align="center">0.1175</td>
+<td align="center">198257</td>
+<td align="center">30.56</td>
+<td align="center">17513</td>
+<td align="center">1.92</td>
+<td align="center">4830656</td>
+<td align="center">63070.64</td>
+<td align="left">其他</td>
+</tr>
+<tr class="even">
+<td align="center">6</td>
+<td align="left">你我贷</td>
+<td align="center">97555.4</td>
+<td align="center">0.1042</td>
+<td align="center">93277</td>
+<td align="center">12.39</td>
+<td align="center">280545</td>
+<td align="center">1.82</td>
+<td align="center">1734631</td>
+<td align="center">19950.76</td>
+<td align="left">其他</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="710" class="section level3">
+<h3>近7天成交额排名前10</h3>
+<pre class="r"><code>gdata7 &lt;- select(tmpdata7, c(&quot;平台名称&quot;, &quot;成交额&quot;, &quot;group&quot;)) %&gt;% arrange(desc(成交额))
+
+gdata7 %&gt;% head(10) %&gt;% ggplot(aes(reorder(平台名称, 成交额), 成交额, fill = group)) + 
+    geom_bar(stat = &quot;identity&quot;) + coord_flip() + geom_text(aes(x = 平台名称, 
+    y = 成交额 * 0.8, label = sprintf(&quot;%2.0f&quot;, 成交额)), color = &quot;#008899&quot;) + 
+    ggtitle(&quot;近7天成交额排名&quot;) + xlab(label = &quot;平台名称&quot;)</code></pre>
+<p><img src="/post/2017-12-01-r-Scrape-data-from-p2peye-webpage_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>数据显示，团贷网近30天交易额为<strong>127860.86</strong>万元，排名为第<strong>4</strong>名。</p>
+</div>
+<div id="7" class="section level3">
+<h3>最近7天各项数据综合分析</h3>
+<p>我们再看看最近7天成交额前三名加上团贷网一起画个雷达图进行各项数据对比。</p>
+<pre class="r"><code>windowsFonts(yahei = &quot;MS YAHEI&quot;)
+require(scales)
+tmpdata7.radar &lt;- tmpdata7 %&gt;% select(平台名称, 成交额, 投资人, 借款人, 累计贷款余额, 
+    资金净流入) %&gt;% mutate_if(.predicate = is.numeric, rescale) %&gt;% arrange(desc(成交额)) %&gt;% 
+    dplyr::filter(row_number() == 1:3 | 平台名称 == &quot;团贷网&quot;)
+ggradar::ggradar(tmpdata7.radar, font.radar = &quot;yahei&quot;, group.point.size = 3, 
+    axis.label.size = 4, legend.text.size = 12)</code></pre>
+<p><img src="/post/2017-12-01-r-Scrape-data-from-p2peye-webpage_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+</div>
+<div id="30" class="section level2">
+<h2>最近30天数据分析</h2>
+<div class="section level3">
+<h3>数据处理</h3>
+<pre class="r"><code>url30 &lt;- &quot;http://www.p2peye.com/shuju/ptsj_month/&quot;
+webpageTable &lt;- url30 %&gt;% read_html() %&gt;% # html_nodes(css =&#39;#platdata&#39;) %&gt;%
+html_table()
+p2pdata30 &lt;- as_tibble(webpageTable[[2]])
+names(p2pdata30) &lt;- names(webpageTable[[1]])
+p2pdata30$操作 &lt;- NULL
+tmpdata30 &lt;- p2pdata30
+# 去除数据中多余文字
+tmp1 &lt;- c(3:10)
+tmpdata30[, tmp1] &lt;- select(tmpdata30, tmp1) %&gt;% transmute_all(function(.) {
+    gsub(&quot;([万])|([人])|([月])|([分钟])|([%])&quot;, &quot;&quot;, .)
+})
+tmpdata30[, 3:10] &lt;- select(tmpdata30, 3:10) %&gt;% sapply(as.numeric)
+tmpdata30$综合利率 &lt;- tmpdata30$综合利率/100
+tmpdata30 &lt;- mutate(tmpdata30, group = ifelse(平台名称 == &quot;团贷网&quot;, &quot;团贷网&quot;, 
+    &quot;其他&quot;))
+tmpdata30$平台名称 &lt;- reorder(tmpdata30$平台名称, tmpdata30$成交额)
+
+knitr::kable(head(tmpdata30))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="center">排序</th>
+<th align="left">平台名称</th>
+<th align="center">成交额</th>
+<th align="center">综合利率</th>
+<th align="center">投资人</th>
+<th align="center">借款周期</th>
+<th align="center">借款人</th>
+<th align="center">满标速度</th>
+<th align="center">累计贷款余额</th>
+<th align="center">资金净流入</th>
+<th align="left">group</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">1</td>
+<td align="left">陆金服</td>
+<td align="center">872672.9</td>
+<td align="center">0.0843</td>
+<td align="center">150595</td>
+<td align="center">34.51</td>
+<td align="center">156354</td>
+<td align="center">0.00</td>
+<td align="center">15869694</td>
+<td align="center">62599.33</td>
+<td align="left">其他</td>
+</tr>
+<tr class="even">
+<td align="center">2</td>
+<td align="left">红岭创投</td>
+<td align="center">858377.7</td>
+<td align="center">0.0849</td>
+<td align="center">84580</td>
+<td align="center">1.94</td>
+<td align="center">9808</td>
+<td align="center">14.30</td>
+<td align="center">2061098</td>
+<td align="center">89781.70</td>
+<td align="left">其他</td>
+</tr>
+<tr class="odd">
+<td align="center">3</td>
+<td align="left">微贷网</td>
+<td align="center">679305.7</td>
+<td align="center">0.0721</td>
+<td align="center">142315</td>
+<td align="center">3.30</td>
+<td align="center">843489</td>
+<td align="center">3.99</td>
+<td align="center">1779632</td>
+<td align="center">-77217.77</td>
+<td align="left">其他</td>
+</tr>
+<tr class="even">
+<td align="center">4</td>
+<td align="left">团贷网</td>
+<td align="center">507401.0</td>
+<td align="center">0.0911</td>
+<td align="center">200731</td>
+<td align="center">7.58</td>
+<td align="center">33510</td>
+<td align="center">2.76</td>
+<td align="center">1336779</td>
+<td align="center">89757.63</td>
+<td align="left">团贷网</td>
+</tr>
+<tr class="odd">
+<td align="center">5</td>
+<td align="left">宜人贷</td>
+<td align="center">437657.8</td>
+<td align="center">0.1176</td>
+<td align="center">285294</td>
+<td align="center">31.02</td>
+<td align="center">66587</td>
+<td align="center">2.07</td>
+<td align="center">4825835</td>
+<td align="center">-4256731.34</td>
+<td align="left">其他</td>
+</tr>
+<tr class="even">
+<td align="center">6</td>
+<td align="left">爱钱进</td>
+<td align="center">366252.4</td>
+<td align="center">0.1030</td>
+<td align="center">210284</td>
+<td align="center">30.75</td>
+<td align="center">117839</td>
+<td align="center">0.74</td>
+<td align="center">3766399</td>
+<td align="center">260297.02</td>
+<td align="left">其他</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="3010" class="section level3">
+<h3>近30天成交额排名前10</h3>
+<pre class="r"><code>gdata30 &lt;- select(tmpdata30, c(&quot;平台名称&quot;, &quot;成交额&quot;, &quot;group&quot;)) %&gt;% arrange(desc(成交额))
+gdata30 %&gt;% head(10) %&gt;% ggplot(aes(reorder(平台名称, 成交额), 成交额, fill = group)) + 
+    geom_bar(stat = &quot;identity&quot;) + coord_flip() + geom_text(aes(x = 平台名称, 
+    y = 成交额 * 0.8, label = sprintf(&quot;%2.0f&quot;, 成交额)), color = &quot;#008899&quot;) + 
+    ggtitle(&quot;近30天成交额排名&quot;) + xlab(label = &quot;平台名称&quot;)</code></pre>
+<p><img src="/post/2017-12-01-r-Scrape-data-from-p2peye-webpage_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>数据显示，团贷网近30天交易额为<strong>507401.04</strong>万元，排名为第<strong>4</strong>名。</p>
+</div>
+<div id="30" class="section level3">
+<h3>最近30天各项数据综合分析</h3>
+<p>我们再看看最近30天成交额前三名加上团贷网一起画个雷达图进行各项数据对比。</p>
+<pre class="r"><code>tmpdata30.radar &lt;- tmpdata30 %&gt;% select(平台名称, 成交额, 投资人, 借款人, 累计贷款余额, 
+    资金净流入) %&gt;% mutate_if(is.numeric, rescale) %&gt;% arrange(desc(成交额)) %&gt;% 
+    dplyr::filter(row_number() == 1:3 | 平台名称 == &quot;团贷网&quot;)
+ggradar::ggradar(tmpdata30.radar, font.radar = &quot;yahei&quot;, group.point.size = 3, 
+    axis.label.size = 4, legend.text.size = 12)</code></pre>
+<p><img src="/post/2017-12-01-r-Scrape-data-from-p2peye-webpage_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+</div>
+</div>
+<div class="section level2">
+<h2>累计贷款余额</h2>
+<p>最后我们看看<strong>累计贷款余额</strong>的排名。</p>
+<pre class="r"><code>tmpdata30 %&gt;% mutate(排名 = rank(-累计贷款余额, ties.method = &quot;min&quot;)) %&gt;% arrange(-累计贷款余额) %&gt;% 
+    select(平台名称, 累计贷款余额, 排名) %&gt;% dplyr::filter(row_number() == 1:10 | 
+    平台名称 == c(&quot;团贷网&quot;)) %&gt;% knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">平台名称</th>
+<th align="center">累计贷款余额</th>
+<th align="center">排名</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">陆金服</td>
+<td align="center">15869694</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="left">宜人贷</td>
+<td align="center">4825835</td>
+<td align="center">2</td>
+</tr>
+<tr class="odd">
+<td align="left">向上金服</td>
+<td align="center">3923905</td>
+<td align="center">3</td>
+</tr>
+<tr class="even">
+<td align="left">爱钱进</td>
+<td align="center">3766399</td>
+<td align="center">4</td>
+</tr>
+<tr class="odd">
+<td align="left">懒财网</td>
+<td align="center">2697280</td>
+<td align="center">5</td>
+</tr>
+<tr class="even">
+<td align="left">人人贷</td>
+<td align="center">2407811</td>
+<td align="center">6</td>
+</tr>
+<tr class="odd">
+<td align="left">聚宝匯</td>
+<td align="center">2273275</td>
+<td align="center">7</td>
+</tr>
+<tr class="even">
+<td align="left">红岭创投</td>
+<td align="center">2061098</td>
+<td align="center">8</td>
+</tr>
+<tr class="odd">
+<td align="left">翼龙贷</td>
+<td align="center">2050190</td>
+<td align="center">9</td>
+</tr>
+<tr class="even">
+<td align="left">有利网</td>
+<td align="center">1900095</td>
+<td align="center">10</td>
+</tr>
+<tr class="odd">
+<td align="left">团贷网</td>
+<td align="center">1336779</td>
+<td align="center">17</td>
+</tr>
+</tbody>
+</table>
+</div>
