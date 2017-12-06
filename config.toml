@@ -5,7 +5,10 @@ theme = "blackburn-krup"
 author = "HaoGuang"
 copyright = "&copy; 2017. All rights reserved."
 canonifyurls = true
-paginate = 10
+paginate = 20
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown", "_files$", "_cache$"]
+hasCJKLanguage = true
+summaryLength = 140
 
 
 [indexes]
@@ -16,13 +19,14 @@ paginate = 10
 [params]
   # Shown in the home page
   subtitle = "have fun"
-  brand = "HG"
+  brand = "HG's BLOG"
   googleAnalytics = "Your Google Analytics tracking ID"
   disqus = "YouYan"
   # CSS name for highlight.js
   #highlightjs = "ocean,routeros"
+  highlightjsLang = ["r", "yaml"]
   highlightjs = "zenburn"
-  dateFormat = "02 Jan 2006"
+  dateFormat = "2006-01-02"
 
 
   
@@ -36,7 +40,7 @@ paginate = 10
     identifier = "home"
     url = "/"
   [[menu.main]]
-    name = "文章"
+    name = "文章列表"
     pre = "<i class='fa fa-list fa-fw'></i>"
     weight = 2
     identifier = "post"

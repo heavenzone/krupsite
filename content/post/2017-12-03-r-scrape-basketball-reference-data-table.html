@@ -1,0 +1,450 @@
+---
+title: 抓取basketball-conference的表格数据
+author: Heaven Zone
+date: '2017-12-03'
+slug: r-scrape-basketball-reference-data-table
+categories:
+  - R
+tags:
+  - R
+  - NBA
+description: 'R语言用正则表达式处理html文件获取表格数据'
+---
+
+
+
+<div class="section level2">
+<h2>目的</h2>
+<p>抓取网页【<a href="https://www.basketball-reference.com/leagues/NBA_2017.html" class="uri">https://www.basketball-reference.com/leagues/NBA_2017.html</a>】中<strong>Team Per Game Stats</strong>表格数据。</p>
+</div>
+<div class="section level2">
+<h2>问题</h2>
+<p>其实<a href="http://www.stat-nba.com" class="uri">http://www.stat-nba.com</a>已经有NBA的各种历史统计数据，而且可以直接下载到电子表格，但是还是认为英文版的处理数据会更方便一点，于是找到<a href="https://www.basketball-reference.com" class="uri">https://www.basketball-reference.com</a>网站，网站打开也非常的简洁，本以为可以很方便的就抓取到数据了，可是打开页面【<a href="https://www.basketball-reference.com/leagues/NBA_2017.html" class="uri">https://www.basketball-reference.com/leagues/NBA_2017.html</a>】想抓取<strong>Team Per Game Stats</strong>表格数据的时候，发现并没有抓到这个表格和后面所有表格的数据，只能检测到4个表格，后来查看网页源代码发现这个表格和后面所有表格的源代码都是绿色的，都是用<code>&lt;!-- ... --&gt;</code>注释掉了，估计是通过js处理才把数据显示出来的。</p>
+</div>
+<div class="section level2">
+<h2>处理思路</h2>
+<ul>
+<li>获取网页源代码</li>
+<li>通过正则表达式把该注释符号去掉</li>
+<li>读取处理后的网页源代码</li>
+<li>获取表格数据</li>
+</ul>
+<p>自己对正则表达式不怎么熟悉，所以写出来这个正则表达式把自己也吓了一跳，搜索资料的时候主要是搜索关于<strong>正则表达式 包含指定字符串</strong>和<strong>正则表达式 不包含指定字符串</strong>，我还真搞不懂正则表达式的专业术语是什么东东，例如什么<strong>前瞻后顾</strong>，什么<strong>反向引用</strong>，不知所云，好在通过不断的实践，写出了下面这么长的一个正则表达式：</p>
+<pre><code>html.file &lt;- gsub(pattern = &quot;&lt;!--((?:(?!(&lt;!--)|(--&gt;))[\\w\\W\u4e00-\u9fa5\r\n])*?&lt;table(?:(?!(&lt;!--)|(--&gt;))[\\w\\W\u4e00-\u9fa5\r\n])*?)--&gt;&quot;,&quot;\\1&quot;,x = html.file, perl = TRUE)</code></pre>
+</div>
+<div class="section level2">
+<h2>代码实现</h2>
+<p>习惯性载入这几个爬虫包，然后在网上搜索的时候不小心了解到了htmltab包，不过这个包似乎不能很好处理UTF-8的字符，不过我们这里要处理的网页基本是全英文的，为什么说是基本呢？因为我们要获取的表格数据确实隐含了一些UTF-8字符（不知道这里说是<em>UTF-8字符</em>是否合适，或许叫<em>unicode字符</em>？），没关系，htmltab在处理表格数据的时候确实是比较方便的，因为它自动帮我们预处理了很多东西，我们在这里会尝试试用一下这个包。</p>
+<div class="section level3">
+<h3>载入包：</h3>
+<pre class="r"><code>knitr::opts_chunk$set(
+    message = FALSE,
+    warning = FALSE,
+    echo = TRUE
+)
+library(XML)
+library(xml2)
+library(RCurl)
+library(rvest)
+library(stringr)
+library(tidyverse)
+library(htmltab)</code></pre>
+</div>
+<div class="section level3">
+<h3>方法一：</h3>
+<pre class="r"><code>url &lt;- &quot;https://www.basketball-reference.com/leagues/NBA_2017.html&quot;
+# 读入网页数据
+webpage &lt;- read_html(url)
+
+# 把一些无关紧要的源代码去除掉，后面重新读入的时候更快
+html.tmp &lt;- gsub(pattern = &quot;&lt;meta.*?&gt;|&lt;link.*?&gt;|&lt;img.*?&gt;|&lt;a.*?&gt;|&lt;/a&gt;|\r\n|&lt;script.*?&lt;/script&gt;|&lt;style.*?&lt;/style&gt;&quot;,&quot;&quot;,x = webpage)
+
+# 这里是重点，把将我们要读取的表格外层的注释符号去除掉
+html.tmp &lt;- gsub(pattern = &quot;&lt;!--((?:(?!(&lt;!--)|(--&gt;))[\\w\\W\u4e00-\u9fa5\r\n])*?&lt;table(?:(?!(&lt;!--)|(--&gt;))[\\w\\W\u4e00-\u9fa5\r\n])*?)--&gt;&quot;,&quot;\\1&quot;,x = html.tmp, perl = TRUE)
+
+# 读取ID为team-stats-per_game的表格数据
+webpage.table &lt;- htmltab(html.tmp, which =&quot;//table[@id=&#39;team-stats-per_game&#39;]&quot; )
+
+# 输出表格数据
+# 为了不影响页面排班，输出结果只输出10列10行
+knitr::kable(webpage.table %&gt;% select(1:10) %&gt;% slice(1:10))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Rk</th>
+<th align="left">Team</th>
+<th align="left">G</th>
+<th align="left">MP</th>
+<th align="left">FG</th>
+<th align="left">FGA</th>
+<th align="left">FG%</th>
+<th align="left">3P</th>
+<th align="left">3PA</th>
+<th align="left">3P%</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">Golden State Warriors*</td>
+<td align="left">82</td>
+<td align="left">241.2</td>
+<td align="left">43.1</td>
+<td align="left">87.1</td>
+<td align="left">.495</td>
+<td align="left">12.0</td>
+<td align="left">31.2</td>
+<td align="left">.383</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">Houston Rockets*</td>
+<td align="left">82</td>
+<td align="left">241.2</td>
+<td align="left">40.3</td>
+<td align="left">87.2</td>
+<td align="left">.462</td>
+<td align="left">14.4</td>
+<td align="left">40.3</td>
+<td align="left">.357</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">Denver Nuggets</td>
+<td align="left">82</td>
+<td align="left">240.9</td>
+<td align="left">41.2</td>
+<td align="left">87.7</td>
+<td align="left">.469</td>
+<td align="left">10.6</td>
+<td align="left">28.8</td>
+<td align="left">.368</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left">Cleveland Cavaliers*</td>
+<td align="left">82</td>
+<td align="left">242.4</td>
+<td align="left">39.9</td>
+<td align="left">84.9</td>
+<td align="left">.470</td>
+<td align="left">13.0</td>
+<td align="left">33.9</td>
+<td align="left">.384</td>
+</tr>
+<tr class="odd">
+<td align="left">5</td>
+<td align="left">Washington Wizards*</td>
+<td align="left">82</td>
+<td align="left">242.1</td>
+<td align="left">41.3</td>
+<td align="left">87.0</td>
+<td align="left">.475</td>
+<td align="left">9.2</td>
+<td align="left">24.8</td>
+<td align="left">.372</td>
+</tr>
+<tr class="even">
+<td align="left">6</td>
+<td align="left">Los Angeles Clippers*</td>
+<td align="left">82</td>
+<td align="left">240.9</td>
+<td align="left">39.5</td>
+<td align="left">83.2</td>
+<td align="left">.475</td>
+<td align="left">10.3</td>
+<td align="left">27.4</td>
+<td align="left">.375</td>
+</tr>
+<tr class="odd">
+<td align="left">7</td>
+<td align="left">Boston Celtics*</td>
+<td align="left">82</td>
+<td align="left">240.9</td>
+<td align="left">38.6</td>
+<td align="left">85.1</td>
+<td align="left">.454</td>
+<td align="left">12.0</td>
+<td align="left">33.4</td>
+<td align="left">.359</td>
+</tr>
+<tr class="even">
+<td align="left">8</td>
+<td align="left">Portland Trail Blazers*</td>
+<td align="left">82</td>
+<td align="left">243.0</td>
+<td align="left">39.5</td>
+<td align="left">86.1</td>
+<td align="left">.459</td>
+<td align="left">10.4</td>
+<td align="left">27.7</td>
+<td align="left">.375</td>
+</tr>
+<tr class="odd">
+<td align="left">9</td>
+<td align="left">Phoenix Suns</td>
+<td align="left">82</td>
+<td align="left">241.8</td>
+<td align="left">39.9</td>
+<td align="left">88.5</td>
+<td align="left">.450</td>
+<td align="left">7.5</td>
+<td align="left">22.6</td>
+<td align="left">.332</td>
+</tr>
+<tr class="even">
+<td align="left">10</td>
+<td align="left">Toronto Raptors*</td>
+<td align="left">82</td>
+<td align="left">241.2</td>
+<td align="left">39.2</td>
+<td align="left">84.4</td>
+<td align="left">.464</td>
+<td align="left">8.8</td>
+<td align="left">24.3</td>
+<td align="left">.363</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level3">
+<h3>方法二：</h3>
+<p>其实我是先用了这个办法的，把网页直接下载下来保存成一个临时文件，原本想通过处理文本文件的方法把注释处理掉，然后再重新读入的，不过后来发现这个过程有点像绕了一个大圈，还好最后测试了一下还是可以像方法一那样直接读入变量进行处理，不过为了记录方法二这个过程，这里还是把这个过程记录下来。</p>
+<pre class="r"><code>url &lt;- &quot;https://www.basketball-reference.com/leagues/NBA_2017.html&quot;
+
+# 下载到临时文件
+download.file(url,&quot;../../data/tmp.html&quot;, quiet = TRUE)
+
+# 通过read_file读入变量
+html.file &lt;- read_file(&quot;../../data/tmp.html&quot;)
+
+# 去除html无用的代码
+html.file &lt;- gsub(pattern = &quot;&lt;meta.*?&gt;|&lt;link.*?&gt;|&lt;img.*?&gt;|&lt;a.*?&gt;|&lt;/a&gt;|\r\n|&lt;script.*?&lt;/script&gt;|&lt;style.*?&lt;/style&gt;&quot;,&quot;&quot;,x = html.file)
+
+# 去掉表格数据外层的注释
+html.file &lt;- gsub(pattern = &quot;&lt;!--((?:(?!(&lt;!--)|(--&gt;))[\\w\\W\u4e00-\u9fa5\r\n])*?&lt;table(?:(?!(&lt;!--)|(--&gt;))[\\w\\W\u4e00-\u9fa5\r\n])*?)--&gt;&quot;,&quot;\\1&quot;,x = html.file, perl = TRUE)
+
+# 重新写入html文件
+write_file(html.file,&quot;../../data/tmp.html&quot;)
+
+# 通过read_html读入处理过的html文件
+webpage.new2 &lt;- read_html(&quot;../../data/tmp.html&quot;)
+
+# 获取表格数据
+webpage.table2 &lt;- html_nodes(webpage.new2, css = &quot;#team-stats-per_game&quot;)
+webpage.table2 &lt;- html_table(webpage.table2[[1]])
+
+# 删除临时文件
+file.remove(&quot;../../data/tmp.html&quot;)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># 输出表格
+# 为了不影响页面排班，输出结果只输出10列10行
+knitr::kable(webpage.table2 %&gt;% select(1:10) %&gt;% slice(1:10))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Rk</th>
+<th align="left">Team</th>
+<th align="right">G</th>
+<th align="right">MP</th>
+<th align="right">FG</th>
+<th align="right">FGA</th>
+<th align="right">FG%</th>
+<th align="right">3P</th>
+<th align="right">3PA</th>
+<th align="right">3P%</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">Golden State Warriors*</td>
+<td align="right">82</td>
+<td align="right">241.2</td>
+<td align="right">43.1</td>
+<td align="right">87.1</td>
+<td align="right">0.495</td>
+<td align="right">12.0</td>
+<td align="right">31.2</td>
+<td align="right">0.383</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">Houston Rockets*</td>
+<td align="right">82</td>
+<td align="right">241.2</td>
+<td align="right">40.3</td>
+<td align="right">87.2</td>
+<td align="right">0.462</td>
+<td align="right">14.4</td>
+<td align="right">40.3</td>
+<td align="right">0.357</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="left">Denver Nuggets</td>
+<td align="right">82</td>
+<td align="right">240.9</td>
+<td align="right">41.2</td>
+<td align="right">87.7</td>
+<td align="right">0.469</td>
+<td align="right">10.6</td>
+<td align="right">28.8</td>
+<td align="right">0.368</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="left">Cleveland Cavaliers*</td>
+<td align="right">82</td>
+<td align="right">242.4</td>
+<td align="right">39.9</td>
+<td align="right">84.9</td>
+<td align="right">0.470</td>
+<td align="right">13.0</td>
+<td align="right">33.9</td>
+<td align="right">0.384</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="left">Washington Wizards*</td>
+<td align="right">82</td>
+<td align="right">242.1</td>
+<td align="right">41.3</td>
+<td align="right">87.0</td>
+<td align="right">0.475</td>
+<td align="right">9.2</td>
+<td align="right">24.8</td>
+<td align="right">0.372</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="left">Los Angeles Clippers*</td>
+<td align="right">82</td>
+<td align="right">240.9</td>
+<td align="right">39.5</td>
+<td align="right">83.2</td>
+<td align="right">0.475</td>
+<td align="right">10.3</td>
+<td align="right">27.4</td>
+<td align="right">0.375</td>
+</tr>
+<tr class="odd">
+<td align="right">7</td>
+<td align="left">Boston Celtics*</td>
+<td align="right">82</td>
+<td align="right">240.9</td>
+<td align="right">38.6</td>
+<td align="right">85.1</td>
+<td align="right">0.454</td>
+<td align="right">12.0</td>
+<td align="right">33.4</td>
+<td align="right">0.359</td>
+</tr>
+<tr class="even">
+<td align="right">8</td>
+<td align="left">Portland Trail Blazers*</td>
+<td align="right">82</td>
+<td align="right">243.0</td>
+<td align="right">39.5</td>
+<td align="right">86.1</td>
+<td align="right">0.459</td>
+<td align="right">10.4</td>
+<td align="right">27.7</td>
+<td align="right">0.375</td>
+</tr>
+<tr class="odd">
+<td align="right">9</td>
+<td align="left">Phoenix Suns</td>
+<td align="right">82</td>
+<td align="right">241.8</td>
+<td align="right">39.9</td>
+<td align="right">88.5</td>
+<td align="right">0.450</td>
+<td align="right">7.5</td>
+<td align="right">22.6</td>
+<td align="right">0.332</td>
+</tr>
+<tr class="even">
+<td align="right">10</td>
+<td align="left">Toronto Raptors*</td>
+<td align="right">82</td>
+<td align="right">241.2</td>
+<td align="right">39.2</td>
+<td align="right">84.4</td>
+<td align="right">0.464</td>
+<td align="right">8.8</td>
+<td align="right">24.3</td>
+<td align="right">0.363</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level3">
+<h3>小结</h3>
+<p>我们可以看到两种方法都已经成功把表格数据抓出来了，剩下的就是一些数据清洗工作了，例如把Team那一列的城市名称和队名分离出来，去除掉一些*****号，把一些列转换成数值型等等。</p>
+<p>由于为了有更美观的输出结果，上面我都用了<code>knitr::kable</code>来输出表格数据，下面我们再用<code>str</code>命令来查看一下<code>htmltab::htmltab</code>和<code>rvest::html_table</code>的输出结果有什么区别，看看哪个更好。</p>
+<pre class="r"><code>str(webpage.table)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    30 obs. of  25 variables:
+##  $ Rk  : chr  &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...
+##  $ Team: chr  &quot;Golden State Warriors*&quot; &quot;Houston Rockets*&quot; &quot;Denver Nuggets&quot; &quot;Cleveland Cavaliers*&quot; ...
+##  $ G   : chr  &quot;82&quot; &quot;82&quot; &quot;82&quot; &quot;82&quot; ...
+##  $ MP  : chr  &quot;241.2&quot; &quot;241.2&quot; &quot;240.9&quot; &quot;242.4&quot; ...
+##  $ FG  : chr  &quot;43.1&quot; &quot;40.3&quot; &quot;41.2&quot; &quot;39.9&quot; ...
+##  $ FGA : chr  &quot;87.1&quot; &quot;87.2&quot; &quot;87.7&quot; &quot;84.9&quot; ...
+##  $ FG% : chr  &quot;.495&quot; &quot;.462&quot; &quot;.469&quot; &quot;.470&quot; ...
+##  $ 3P  : chr  &quot;12.0&quot; &quot;14.4&quot; &quot;10.6&quot; &quot;13.0&quot; ...
+##  $ 3PA : chr  &quot;31.2&quot; &quot;40.3&quot; &quot;28.8&quot; &quot;33.9&quot; ...
+##  $ 3P% : chr  &quot;.383&quot; &quot;.357&quot; &quot;.368&quot; &quot;.384&quot; ...
+##  $ 2P  : chr  &quot;31.1&quot; &quot;25.9&quot; &quot;30.6&quot; &quot;26.9&quot; ...
+##  $ 2PA : chr  &quot;55.8&quot; &quot;46.9&quot; &quot;58.9&quot; &quot;51.0&quot; ...
+##  $ 2P% : chr  &quot;.557&quot; &quot;.552&quot; &quot;.519&quot; &quot;.528&quot; ...
+##  $ FT  : chr  &quot;17.8&quot; &quot;20.3&quot; &quot;18.7&quot; &quot;17.5&quot; ...
+##  $ FTA : chr  &quot;22.6&quot; &quot;26.5&quot; &quot;24.2&quot; &quot;23.3&quot; ...
+##  $ FT% : chr  &quot;.788&quot; &quot;.766&quot; &quot;.774&quot; &quot;.748&quot; ...
+##  $ ORB : chr  &quot;9.4&quot; &quot;10.9&quot; &quot;11.8&quot; &quot;9.3&quot; ...
+##  $ DRB : chr  &quot;35.0&quot; &quot;33.5&quot; &quot;34.6&quot; &quot;34.4&quot; ...
+##  $ TRB : chr  &quot;44.4&quot; &quot;44.4&quot; &quot;46.4&quot; &quot;43.7&quot; ...
+##  $ AST : chr  &quot;30.4&quot; &quot;25.2&quot; &quot;25.3&quot; &quot;22.7&quot; ...
+##  $ STL : chr  &quot;9.6&quot; &quot;8.2&quot; &quot;6.9&quot; &quot;6.6&quot; ...
+##  $ BLK : chr  &quot;6.8&quot; &quot;4.3&quot; &quot;3.9&quot; &quot;4.0&quot; ...
+##  $ TOV : chr  &quot;14.8&quot; &quot;15.1&quot; &quot;15.0&quot; &quot;13.7&quot; ...
+##  $ PF  : chr  &quot;19.3&quot; &quot;19.9&quot; &quot;19.1&quot; &quot;18.1&quot; ...
+##  $ PTS : chr  &quot;115.9&quot; &quot;115.3&quot; &quot;111.7&quot; &quot;110.3&quot; ...</code></pre>
+<pre class="r"><code>str(webpage.table2)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    31 obs. of  25 variables:
+##  $ Rk  : int  1 2 3 4 5 6 7 8 9 10 ...
+##  $ Team: chr  &quot;Golden State Warriors*&quot; &quot;Houston Rockets*&quot; &quot;Denver Nuggets&quot; &quot;Cleveland Cavaliers*&quot; ...
+##  $ G   : int  82 82 82 82 82 82 82 82 82 82 ...
+##  $ MP  : num  241 241 241 242 242 ...
+##  $ FG  : num  43.1 40.3 41.2 39.9 41.3 39.5 38.6 39.5 39.9 39.2 ...
+##  $ FGA : num  87.1 87.2 87.7 84.9 87 83.2 85.1 86.1 88.5 84.4 ...
+##  $ FG% : num  0.495 0.462 0.469 0.47 0.475 0.475 0.454 0.459 0.45 0.464 ...
+##  $ 3P  : num  12 14.4 10.6 13 9.2 10.3 12 10.4 7.5 8.8 ...
+##  $ 3PA : num  31.2 40.3 28.8 33.9 24.8 27.4 33.4 27.7 22.6 24.3 ...
+##  $ 3P% : num  0.383 0.357 0.368 0.384 0.372 0.375 0.359 0.375 0.332 0.363 ...
+##  $ 2P  : num  31.1 25.9 30.6 26.9 32.1 29.3 26.6 29.2 32.4 30.3 ...
+##  $ 2PA : num  55.8 46.9 58.9 51 62.3 55.8 51.7 58.4 65.9 60 ...
+##  $ 2P% : num  0.557 0.552 0.519 0.528 0.515 0.525 0.515 0.499 0.491 0.505 ...
+##  $ FT  : num  17.8 20.3 18.7 17.5 17.3 19.3 18.7 18.5 20.4 19.7 ...
+##  $ FTA : num  22.6 26.5 24.2 23.3 22.1 26 23.2 23.7 26.3 24.7 ...
+##  $ FT% : num  0.788 0.766 0.774 0.748 0.784 0.745 0.807 0.78 0.776 0.796 ...
+##  $ ORB : num  9.4 10.9 11.8 9.3 10.3 9 9.1 10.1 11.9 10.6 ...
+##  $ DRB : num  35 33.5 34.6 34.4 32.6 34 32.9 33.5 33.1 32.6 ...
+##  $ TRB : num  44.4 44.4 46.4 43.7 42.9 43 42 43.7 45 43.3 ...
+##  $ AST : num  30.4 25.2 25.3 22.7 23.9 22.5 25.2 21.1 19.6 18.5 ...
+##  $ STL : num  9.6 8.2 6.9 6.6 8.5 7.5 7.5 7 8.2 8.3 ...
+##  $ BLK : num  6.8 4.3 3.9 4 4.1 4.2 4.1 5 4.9 4.9 ...
+##  $ TOV : num  14.8 15.1 15 13.7 14.2 13 13.3 13.7 15.4 12.7 ...
+##  $ PF  : num  19.3 19.9 19.1 18.1 21.3 19.8 20.6 21.2 24.8 20.8 ...
+##  $ PTS : num  116 115 112 110 109 ...</code></pre>
+<p>可以看到，用<strong>htmltab</strong>返回的是一个data.frame，储存为数字的列的类型是字符串，而用<strong>html_table</strong>返回的也是一个data.frame，不过为数字的列自动已经帮我们转化成数值型，让我们省去了再去转化的过程。</p>
+<p>看来还是用<strong>rvest::html_table</strong>更好一点哦。</p>
+</div>
+</div>
+<div class="section level2">
+<h2>参考资料</h2>
+<ul>
+<li><a href="http://blog.csdn.net/maqingli20/article/details/7317925">正则表达式 不包含指定字符串</a></li>
+<li><a href="http://www.cnblogs.com/-ShiL/archive/2012/04/06/Star201204061009.html">正则基础之——反向引用</a></li>
+</ul>
+</div>

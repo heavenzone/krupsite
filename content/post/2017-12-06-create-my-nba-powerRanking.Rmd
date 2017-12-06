@@ -1,0 +1,495 @@
+---
+title: 构建自己的nba实力排行榜
+author: Heaven Zone
+date: '2017-12-06'
+slug: create-my-nba-powerRanking
+categories:
+  - NBA
+tags:
+  - NBA
+  - R
+description: 'R语言用打造自己的NBA实力排行榜'
+keyword: 'NBA, R语言'
+---
+
+
+## 简介
+
+一直想根据自己对篮球的理解对NBA实力进行一个实力排名，终于，在学习了R语言之后，可以拿NBA数据来玩玩了。
+
+下面先看看team-stats-per_game表格的列名的解释。
+
+```
+Also view explanations by holding mouse over column headers
+Rk -- Rank
+G -- Games
+MP -- Minutes Played
+FG -- Field Goals
+FGA -- Field Goal Attempts
+FG% -- Field Goal Percentage
+3P -- 3-Point Field Goals
+3PA -- 3-Point Field Goal Attempts
+3P% -- 3-Point Field Goal Percentage
+2P -- 2-Point Field Goals
+2PA -- 2-point Field Goal Attempts
+2P% -- 2-Point Field Goal Percentage
+FT -- Free Throws
+FTA -- Free Throw Attempts
+FT% -- Free Throw Percentage
+ORB -- Offensive Rebounds
+DRB -- Defensive Rebounds
+TRB -- Total Rebounds
+AST -- Assists
+STL -- Steals
+BLK -- Blocks
+TOV -- Turnovers
+PF -- Personal Fouls
+PTS -- Points
+
+```
+
+## 载入常用包
+
+```{r setup,	message = FALSE,	warning = FALSE, echo = TRUE}
+knitr::opts_chunk$set(
+	message = FALSE,
+	warning = FALSE,
+	echo = TRUE
+)
+library(XML)
+library(xml2)
+library(RCurl)
+library(rvest)
+library(stringr)
+library(readxl)
+library(tidyverse)
+library(htmltab)
+library(scales)
+library(lubridate)
+lastSeason <- "2017"
+thisSeason <- "2018"
+compTeams <- c("Warriors", "Spurs", "Cavaliers")
+```
+
+
+## `r paste0(as.character(as.numeric(lastSeason)-1),"-",lastSeason)`赛季五项指数
+
+
+### 抓取数据
+
+
+```{r}
+url <- paste0("https://www.basketball-reference.com/leagues/NBA_",lastSeason,".html")
+
+webpage <- read_html(url)
+webpage.new <- gsub(pattern = "<meta.*?>|<link.*?>|<img.*?>|<a.*?>|</a>|\r\n|<script.*?</script>|<style.*?</style>","",x = webpage)
+webpage.new <- gsub(pattern = "<!--((?:(?!(<!--)|(-->))[\\w\\W\u4e00-\u9fa5\r\n])*?<table(?:(?!(<!--)|(-->))[\\w\\W\u4e00-\u9fa5\r\n])*?)-->","\\1",x = webpage.new, perl = TRUE)
+
+webpage.new <- read_html(webpage.new)
+
+webpage.table <- html_nodes(webpage.new, css = "#team-stats-per_game")
+webpage.table <- html_table(webpage.table[[1]])
+
+# 输出5行10列看看数据结构
+webpage.table %>% .[1:5, 1:10]
+```
+
+
+### 分离城市名称和队名
+
+
+```{r}
+# 去掉*号
+table.teamStatsPerGame <- webpage.table
+table.teamStatsPerGame[,"Team"] <- transmute_at(table.teamStatsPerGame,vars(Team),function(.) {gsub("([*])", "", .)})
+table.teamStatsPerGame <- table.teamStatsPerGame[-31,]
+
+table.teamStatsPerGame[table.teamStatsPerGame$Team == "Portland Trail Blazers","Team"] <- "Portland TrailBlazers"
+table.teamStatsPerGame[table.teamStatsPerGame$Team == "Golden State Warriors","Team"] <- "GoldenState Warriors"
+table.teamStatsPerGame[,"Team"] <- transmute_at(table.teamStatsPerGame,vars(Team),function(.) {gsub("(^[\\w]*?)\\s([\\w]*?\\s[\\w]*?$)", "\\1\\2", . , perl = TRUE)})
+# 处理列名称
+names(table.teamStatsPerGame) <- gsub("%","pct",names(table.teamStatsPerGame))
+names(table.teamStatsPerGame) <- gsub("3","Three",names(table.teamStatsPerGame))
+names(table.teamStatsPerGame) <- gsub("2","Two",names(table.teamStatsPerGame))
+
+table.teamStatsPerGame <- table.teamStatsPerGame %>% separate(col = "Team",into = c("City", "TeamName"), sep = " ")
+
+# 输出查看数据机构
+table.teamStatsPerGame[1:5, 2:7]
+```
+
+
+### 构建五项实力指数
+
+得分：得分0.3+三分命中率0.1+三分命中次数0.25+二分命中率0.25+二分命中次数0.1
+篮板：进攻篮板0.55+防守篮板0.45
+组织：助攻AST0.55，-失误TOV0.45
+防守：盖帽0.5，抢断0.5
+罚球：罚球命中次数0.45，罚球命中率0.2，犯规-PF0.35
+
+#### 标准化数据
+
+```{r}
+nbastats.rescale <- table.teamStatsPerGame %>%
+  mutate_if(.predicate = is.numeric, rescale)
+names(nbastats.rescale)
+```
+
+#### 计算五项实力指数
+
+```{r}
+nba.shili <- transmute(nbastats.rescale,球队 = TeamName, 
+                       得分 = PTS*0.3+ThreePpct*0.1+ThreeP*0.25+TwoPpct*0.25+TwoP*0.1,
+                       篮板 = ORB*0.55+DRB*0.45,
+                       组织 = AST*0.55+(1-TOV)*0.45,
+                       防守 = BLK*0.5+STL*0.5,
+                       罚球 = FT*0.6+FTpct*0.2+(1-PF)*0.2)
+```
+
+
+### 综合实力可视化分析
+
+```{r}
+windowsFonts(yahei = "MS YAHEI")
+nba.shili.rescale <- nba.shili %>%
+  mutate_if(.predicate = is.numeric, rescale)
+
+lastSeasonTitle <- paste0(as.character(as.numeric(lastSeason)-1),"-",lastSeason,"赛季5项数据分析")
+nba.shili.rescale %>% 
+  select(球队, 得分, 篮板, 组织, 防守, 罚球) %>%
+  dplyr::filter(球队 %in% compTeams) %>%
+  ggradar::ggradar(plot.data = .,font.radar = "yahei",
+                 group.point.size = 3, 
+                 axis.label.size = 4, 
+                 legend.text.size = 12) + 
+  ggtitle(lastSeasonTitle)
+```
+
+
+
+## `r paste0(as.character(as.numeric(thisSeason)-1),"-",thisSeason)`赛季五项指数
+
+复制上面代码，对本赛季的team-stats-per_game数据进行抓取分析。
+
+```{r}
+url.thisSeason <- paste0("https://www.basketball-reference.com/leagues/NBA_",thisSeason,".html")
+webpage.thisSeason <- read_html(url.thisSeason)
+webpage.thisSeason <- gsub(pattern = "<meta.*?>|<link.*?>|<img.*?>|<a.*?>|</a>|\r\n|<script.*?</script>|<style.*?</style>","",x = webpage.thisSeason)
+webpage.thisSeason <- gsub(pattern = "<!--((?:(?!(<!--)|(-->))[\\w\\W\u4e00-\u9fa5\r\n])*?<table(?:(?!(<!--)|(-->))[\\w\\W\u4e00-\u9fa5\r\n])*?)-->","\\1",x = webpage.thisSeason, perl = TRUE)
+webpage.thisSeason <- read_html(webpage.thisSeason)
+table.thisSeason <- html_nodes(webpage.thisSeason, css = "#team-stats-per_game")
+table.thisSeason <- html_table(table.thisSeason[[1]])
+table.thisSeason.stats <- table.thisSeason
+table.thisSeason.stats[,"Team"] <- transmute_at(table.thisSeason.stats,vars(Team),function(.) {gsub("([*])", "", .)})
+table.thisSeason.stats <- table.thisSeason.stats[-31,]
+table.thisSeason.stats[table.thisSeason.stats$Team == "Portland Trail Blazers","Team"] <- "Portland TrailBlazers"
+table.thisSeason.stats[table.thisSeason.stats$Team == "Golden State Warriors","Team"] <- "GoldenState Warriors"
+table.thisSeason.stats[,"Team"] <- transmute_at(table.thisSeason.stats,vars(Team),function(.) {gsub("(^[\\w]*?)\\s([\\w]*?\\s[\\w]*?$)", "\\1\\2", . , perl = TRUE)})
+names(table.thisSeason.stats) <- gsub("%","pct",names(table.thisSeason.stats))
+names(table.thisSeason.stats) <- gsub("3","Three",names(table.thisSeason.stats))
+names(table.thisSeason.stats) <- gsub("2","Two",names(table.thisSeason.stats))
+table.thisSeason.stats <- table.thisSeason.stats %>% separate(col = "Team",into = c("City", "TeamName"), sep = " ")
+
+# 标准化数据 #
+thisSeason.stats.rescale <- table.thisSeason.stats %>%
+  mutate_if(.predicate = is.numeric, rescale)
+
+# 本赛季五项指数 #
+thisSeason.nba.shili <- transmute(thisSeason.stats.rescale,球队 = TeamName, 
+                       得分 = PTS*0.3+ThreePpct*0.1+ThreeP*0.25+TwoPpct*0.25+TwoP*0.1,
+                       篮板 = ORB*0.55+DRB*0.45,
+                       组织 = AST*0.55+(1-TOV)*0.45,
+                       防守 = BLK*0.5+STL*0.5,
+                       罚球 = FT*0.6+FTpct*0.2+(1-PF)*0.2)
+
+# 再次标准化数据 #
+thisSeason.nba.shili.rescale <- thisSeason.nba.shili %>%
+  mutate_if(.predicate = is.numeric, rescale)
+
+# 雷达图可视化 #
+thisSeasonTitle <- paste0(as.character(as.numeric(thisSeason)-1),"-",thisSeason,"赛季5项数据分析")
+thisSeason.nba.shili.rescale %>% 
+  select(球队, 得分, 篮板, 组织, 防守, 罚球) %>%
+  dplyr::filter(球队 %in% compTeams) %>%
+  ggradar::ggradar(plot.data = .,font.radar = "yahei",
+                 group.point.size = 3, 
+                 axis.label.size = 4, 
+                 legend.text.size = 12) +
+  ggtitle(thisSeasonTitle)
+```
+
+
+## `r paste0(as.character(as.numeric(thisSeason)-1),"-",thisSeason)`赛季最近10场胜率分析
+
+由于basket-reference网站的standing表格没有最近10场比赛的胜率，所以到espn的网站去抓了。
+
+```{r}
+urlespn <- "http://www.espn.com/nba/standings/_/group/league"
+webpage.espn <- read_html(urlespn)
+webpage.espn.new <- webpage.espn
+#write_file(webpage.espn.new, path = "data/test.html")
+webpage.espn.new <- gsub(pattern = "<abbr.*?/abbr>", "", x = webpage.espn.new)
+webpage.espn.new <- gsub(pattern = "<footer.*?/footer>", "", x = webpage.espn.new)
+webpage.espn.new <- gsub(pattern = "<a.*?>|</a>|<span.*?>|</span>", "", x = webpage.espn.new)
+webpage.espn.new <- gsub(pattern = "<script.*?/script>", "", x = webpage.espn.new)
+webpage.espn.new <- gsub(pattern = "<thead.*?>", "<thead><tr>", x = webpage.espn.new)
+webpage.espn.new <- gsub(pattern = "</thead>", "</tr></thead>", x = webpage.espn.new)
+
+webpage.espn.new <- read_html(webpage.espn.new)
+table.last.ten <- html_nodes(webpage.espn.new, css = "table.standings")
+table.last.ten <- html_table(table.last.ten[[1]])
+names(table.last.ten)[1] <- "Team"
+
+# 处理队名
+table.last.ten[table.last.ten$Team == "Portland Trail Blazers","Team"] <- "Portland TrailBlazers"
+table.last.ten[,"Team"] <- transmute_at(table.last.ten,vars(Team),function(.) {gsub("(^[\\w]*?)\\s([\\w]*?\\s[\\w]*?$)", "\\1\\2", . , perl = TRUE)})
+table.last.ten <- table.last.ten %>% separate(col = "Team",into = c("City", "TeamName"), sep = " ")
+table.last.ten <- table.last.ten %>% separate(col = "L10",into = c("L10Win", "L10Lost"), sep = "-")
+table.last.ten <- table.last.ten %>% mutate_at(.vars = c("L10Win","L10Lost"), as.numeric)
+table.last.ten <- table.last.ten %>% mutate(最近十场胜率 = L10Win / (L10Win + L10Lost))
+
+table.last.ten.rescale <- table.last.ten %>% 
+  transmute_at(.vars = "最近十场胜率", rescale) %>%
+  bind_cols(球队 = table.last.ten$TeamName, .)
+
+thisSeason.nba.shili.rescale <- left_join(thisSeason.nba.shili.rescale, table.last.ten.rescale[,c("球队","最近十场胜率")], by = "球队" )
+```
+
+
+### 综合实力可视化分析
+
+加上最近10场比赛的胜率后，我们再做一次综合实力的雷达图展示。
+
+```{r}
+windowsFonts(yahei = "MS YAHEI")
+thisSeason.nba.shili.rescale %>% 
+  select(球队, 得分, 篮板, 组织, 防守, 罚球, 最近十场胜率) %>%
+  dplyr::filter(球队 %in% compTeams) %>%
+  ggradar::ggradar(plot.data = .,font.radar = "yahei",
+                 group.point.size = 3, 
+                 axis.label.size = 4, 
+                 legend.text.size = 12)+
+  ggtitle(thisSeasonTitle)
+```
+
+
+
+## 生成hgRanking
+
+
+
+我们构建当前实力的公式：
+
+$$目前实力=上赛季5项总实力\times0.2+本赛季5项总实力\times0.45+最近10场实力\times0.35$$
+
+```{r}
+nba.total <- nba.shili.rescale %>%
+  transmute(球队 = 球队, 上赛季实力 = rowSums(.[,-1]))
+tmp <- thisSeason.nba.shili.rescale %>%
+  transmute(球队 = 球队, 本赛季实力 = rowSums(.[,-c(1,7)]))
+nba.total <- left_join(nba.total, tmp, by = "球队")
+nba.total <- left_join(nba.total, thisSeason.nba.shili.rescale[,c("球队","最近十场胜率")], by = "球队")
+nba.total.rescale <- nba.total %>%
+  mutate_if(.predicate = is.numeric, rescale)
+
+nba.total.rescale <- nba.total.rescale %>% 
+  transmute(总实力 = 上赛季实力*0.2 + 本赛季实力*0.45 +最近十场胜率*0.35) %>%
+  bind_cols(nba.total.rescale, .)
+
+```
+
+
+目前时间是`r date()`，根据上面模型生成实力榜：
+
+```{r}
+# hgRanking
+nba.shilibang <- nba.total.rescale %>%
+  transmute(球队 = 球队, hgRanking = rank(desc(总实力), ties.method = "min"))
+# 本赛季总胜率排名
+nba.shilibang <- table.last.ten %>%
+  transmute(球队 = TeamName, 本赛季胜率排名 = rank(desc(PCT), ties.method = "min")) %>%
+  left_join(nba.shilibang, . , by = "球队")
+
+nba.shilibang %>% arrange(hgRanking) %>%
+  knitr::kable()
+```
+
+
+### 模型评价
+
+下面看看这个业余模型效果如何。
+
+```{r}
+nba.shilibang.test <- nba.shilibang %>% mutate(与实际胜率差距 = abs(hgRanking - 本赛季胜率排名))
+less5 <- nba.shilibang.test %>% dplyr::filter(与实际胜率差距 <= 5) %>% count %>% .[[1]]
+less3 <- nba.shilibang.test %>% dplyr::filter(与实际胜率差距 <= 3) %>% count %>% .[[1]]
+```
+
+- **hgRanking**和**本赛季胜率排名**的平均差距是`r nba.shilibang.test[,"与实际胜率差距"] %>% mean`。
+- 差距**小于5**名的有`r less5`，占比`r format(less5/30, digits = 2)`。
+- 差距**小于3**名的有`r less3`，占比`r format(less3/30, digits = 2)`。
+
+下面我们在输出表格和直方图看看效果。
+
+```{r}
+# 表格
+nba.shilibang.test %>% arrange(hgRanking) %>%
+  knitr::kable()
+# 直方图
+ggplot(nba.shilibang.test, aes(与实际胜率差距)) + 
+  geom_histogram(binwidth = 0.5)
+```
+
+
+
+### 加入ESPN的power-rankings来对比
+
+```{r}
+url.pr <- "http://www.espn.com/nba/story/_/page/Basketball-Power-Index/espn-nba-basketball-power-index"
+webpage.pr.tmp <- read_html(url.pr)
+webpage.pr <- gsub(pattern = "<meta.*?>|<link.*?>|<img.*?>|<a.*?>|</a>|\r\n|<script.*?</script>|<style.*?</style>","",x = webpage.pr.tmp)
+
+webpage.pr <- read_html(webpage.pr)
+
+table.pr <- html_nodes(webpage.pr, css = "table.inline-table")
+table.pr <- html_table(table.pr[[1]])
+table.pr <- table.pr[,-c(2,6)]
+table.pr <- table.pr %>% separate(col = "RANK",into = c("RANK", "shortName"), sep = ". ")
+table.pr[,1] <- as.numeric(table.pr[,1])
+
+# 处理队名
+nba.teamName <- read.csv("../../data/nba-teamName.csv", stringsAsFactors = FALSE)
+
+table.pr <- left_join(table.pr, nba.teamName[,c("teamName","shortName")], by = "shortName")
+names(table.pr)[c(1, 6)] <- c("powerRanking", "球队")
+
+nba.shilibang.test <- nba.shilibang.test %>% left_join(table.pr[,c("球队", "powerRanking")], by = "球队")
+
+```
+
+#### 看看预测排名和PowerRanking的差别
+
+```{r}
+nba.shilibang.test <- nba.shilibang.test %>% mutate(与PowerRanking差距 = abs(hgRanking - powerRanking))
+pr.less5 <- nba.shilibang.test %>% dplyr::filter(与PowerRanking差距 <= 5) %>% count %>% .[[1]]
+pr.less3 <- nba.shilibang.test %>% dplyr::filter(与PowerRanking差距 <= 3) %>% count %>% .[[1]]
+```
+
+- **hgRanking**和**本赛季胜率排名**的平均差距是`r nba.shilibang.test[,"与PowerRanking差距"] %>% mean`。
+- 差距**小于5**名的有`r pr.less5`，占比`r format(pr.less5/30, digits = 2)`。
+- 差距**小于3**名的有`r pr.less3`，占比`r format(pr.less3/30, digits = 2)`。
+
+```{r}
+nba.shilibang.test %>% arrange(hgRanking) %>%
+  knitr::kable()
+# 直方图
+ggplot(nba.shilibang.test, aes(与PowerRanking差距)) + 
+  geom_histogram(binwidth = 0.5)
+```
+
+#### 看看胜率排名和PowerRanking的差别
+
+```{r}
+nba.shilibang.test <- nba.shilibang.test %>% mutate(胜率与PowerRanking差距 = abs(本赛季胜率排名 - powerRanking))
+pct.pr.less5 <- nba.shilibang.test %>% dplyr::filter(胜率与PowerRanking差距 <= 5) %>% count %>% .[[1]]
+pct.pr.less3 <- nba.shilibang.test %>% dplyr::filter(胜率与PowerRanking差距 <= 3) %>% count %>% .[[1]]
+```
+
+- **hgRanking**和**本赛季胜率排名**的平均差距是`r nba.shilibang.test[,"胜率与PowerRanking差距"] %>% mean`。
+- 差距**小于5**名的有`r pct.pr.less5`，占比`r format(pct.pr.less5/30, digits = 2)`。
+- 差距**小于3**名的有`r pct.pr.less3`，占比`r format(pct.pr.less3/30, digits = 2)`。
+
+```{r}
+nba.shilibang.test %>% arrange(hgRanking) %>%
+  knitr::kable()
+# 直方图
+ggplot(nba.shilibang.test, aes(胜率与PowerRanking差距)) + 
+  geom_histogram(binwidth = 0.5)
+```
+
+### 这三个排名是否有明显差别？
+
+#### 箱线图分析
+
+我们先画个箱线图看看三种排名两两差距的直方图。
+
+```{r}
+nba.shilibang.test[,c("球队", "与实际胜率差距", "与PowerRanking差距", "胜率与PowerRanking差距")] %>%
+  gather(key = "分组", value = "差距", -c(1)) %>%
+  ggplot() + geom_boxplot(aes(分组, 差距, fill = 分组))
+```
+
+从直方图来看两两差别都不大。
+
+#### 散点图分析
+
+
+```{r}
+nba.shilibang.test[,c(1:3,5)] %>% 
+  gather(key = "分组", value = "排名", -c(1)) %>%
+  ggplot(aes(reorder(球队,排名), 排名, color = 分组)) + 
+  geom_point(position = "jitter") 
+```
+
+
+由散点图来看，效果还是不错的，对于头尾两部分的球队的实力来讲，三种排名差距不大。
+
+而且存在这种差距都是很正常的，因为我的hgRanking和powerRanking都是对球队目前实力的评估，而胜率的排名是整个赛季的战绩的排名，并不能完全代表球队目前的实力。
+
+
+### 回顾目前3个排名
+
+重新再回顾三个排名的情况，今天是`r date()`
+
+```{r}
+nba.shilibang <- left_join(nba.shilibang, table.pr[,c("球队","powerRanking")], by = "球队") %>%
+  arrange(hgRanking)
+nba.shilibang %>%  knitr::kable()
+```
+
+
+
+
+
+## 球队对比分析
+
+下面对比一下`r paste0(compTeams, collapse = ", ")`的各项数据。
+
+```{r}
+# 上赛季5项对比
+nba.shili.rescale %>% 
+  select(球队, 得分, 篮板, 组织, 防守, 罚球) %>%
+  dplyr::filter(球队 %in% compTeams) %>%
+  ggradar::ggradar(plot.data = .,font.radar = "yahei",
+                 group.point.size = 3, 
+                 axis.label.size = 4, 
+                 legend.text.size = 12) + 
+  ggtitle(lastSeasonTitle)
+
+# 本赛季5项对比
+thisSeason.nba.shili.rescale %>% 
+  select(球队, 得分, 篮板, 组织, 防守, 罚球) %>%
+  dplyr::filter(球队 %in% compTeams) %>%
+  ggradar::ggradar(plot.data = .,font.radar = "yahei",
+                 group.point.size = 3, 
+                 axis.label.size = 4, 
+                 legend.text.size = 12) +
+  ggtitle(thisSeasonTitle)
+
+# 排名对比
+nba.shilibang %>% dplyr::filter(球队 %in% compTeams) %>%
+  knitr::kable()
+```
+
+
+
+## 数据来源
+
+- <https://www.basketball-reference.com>
+- <http://www.espn.com/nba>
+
+## 特别说明
+
+上面的雷达图所表达的各项数据的差距大小，并不能代表不同球队的实力差距的大小，仅能代表该项数据在30支球队里面的不同排名。
+
+
