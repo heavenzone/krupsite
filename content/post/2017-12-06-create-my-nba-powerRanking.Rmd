@@ -7,9 +7,9 @@ categories:
   - NBA
 tags:
   - NBA
-  - R
+  - R语言
 description: 'R语言用打造自己的NBA实力排行榜'
-keyword: 'NBA, R语言'
+keywords: "R语言"
 ---
 
 

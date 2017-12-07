@@ -7,9 +7,9 @@ categories:
   - NBA
 tags:
   - NBA
-  - R
+  - R语言
 description: 'R语言用打造自己的NBA实力排行榜'
-keyword: 'NBA, R语言'
+keywords: "R语言"
 ---
 
 
@@ -271,7 +271,7 @@ nba.total.rescale &lt;- nba.total %&gt;%
 nba.total.rescale &lt;- nba.total.rescale %&gt;% 
   transmute(总实力 = 上赛季实力*0.2 + 本赛季实力*0.45 +最近十场胜率*0.35) %&gt;%
   bind_cols(nba.total.rescale, .)</code></pre>
-<p>目前时间是Wed Dec 06 16:00:50 2017，根据上面模型生成实力榜：</p>
+<p>目前时间是Wed Dec 06 19:40:43 2017，根据上面模型生成实力榜：</p>
 <pre class="r"><code># hgRanking
 nba.shilibang &lt;- nba.total.rescale %&gt;%
   transmute(球队 = 球队, hgRanking = rank(desc(总实力), ties.method = &quot;min&quot;))
@@ -352,14 +352,14 @@ nba.shilibang %&gt;% arrange(hgRanking) %&gt;%
 <td align="center">8</td>
 </tr>
 <tr class="odd">
-<td align="left">TrailBlazers</td>
+<td align="left">Wizards</td>
 <td align="right">13</td>
 <td align="center">12</td>
 </tr>
 <tr class="even">
-<td align="left">Wizards</td>
+<td align="left">Bucks</td>
 <td align="right">14</td>
-<td align="center">12</td>
+<td align="center">11</td>
 </tr>
 <tr class="odd">
 <td align="left">Thunder</td>
@@ -367,9 +367,9 @@ nba.shilibang %&gt;% arrange(hgRanking) %&gt;%
 <td align="center">17</td>
 </tr>
 <tr class="even">
-<td align="left">Bucks</td>
+<td align="left">TrailBlazers</td>
 <td align="right">16</td>
-<td align="center">11</td>
+<td align="center">12</td>
 </tr>
 <tr class="odd">
 <td align="left">Pelicans</td>
@@ -541,16 +541,16 @@ nba.shilibang.test %&gt;% arrange(hgRanking) %&gt;%
 <td align="center">4</td>
 </tr>
 <tr class="odd">
-<td align="left">TrailBlazers</td>
+<td align="left">Wizards</td>
 <td align="right">13</td>
 <td align="center">12</td>
 <td align="center">1</td>
 </tr>
 <tr class="even">
-<td align="left">Wizards</td>
+<td align="left">Bucks</td>
 <td align="right">14</td>
-<td align="center">12</td>
-<td align="center">2</td>
+<td align="center">11</td>
+<td align="center">3</td>
 </tr>
 <tr class="odd">
 <td align="left">Thunder</td>
@@ -559,10 +559,10 @@ nba.shilibang.test %&gt;% arrange(hgRanking) %&gt;%
 <td align="center">2</td>
 </tr>
 <tr class="even">
-<td align="left">Bucks</td>
+<td align="left">TrailBlazers</td>
 <td align="right">16</td>
-<td align="center">11</td>
-<td align="center">5</td>
+<td align="center">12</td>
+<td align="center">4</td>
 </tr>
 <tr class="odd">
 <td align="left">Pelicans</td>
@@ -684,7 +684,7 @@ pr.less3 &lt;- nba.shilibang.test %&gt;% dplyr::filter(与PowerRanking差距 &lt
 <ul>
 <li><strong>hgRanking</strong>和<strong>本赛季胜率排名</strong>的平均差距是3.4。</li>
 <li>差距<strong>小于5</strong>名的有22，占比0.73。</li>
-<li>差距<strong>小于3</strong>名的有19，占比0.63。</li>
+<li>差距<strong>小于3</strong>名的有18，占比0.6。</li>
 </ul>
 <pre class="r"><code>nba.shilibang.test %&gt;% arrange(hgRanking) %&gt;%
   knitr::kable()</code></pre>
@@ -797,20 +797,20 @@ pr.less3 &lt;- nba.shilibang.test %&gt;% dplyr::filter(与PowerRanking差距 &lt
 <td align="center">1</td>
 </tr>
 <tr class="odd">
-<td align="left">TrailBlazers</td>
+<td align="left">Wizards</td>
 <td align="right">13</td>
 <td align="center">12</td>
 <td align="center">1</td>
-<td align="right">12</td>
-<td align="center">1</td>
+<td align="right">9</td>
+<td align="center">4</td>
 </tr>
 <tr class="even">
-<td align="left">Wizards</td>
+<td align="left">Bucks</td>
 <td align="right">14</td>
-<td align="center">12</td>
-<td align="center">2</td>
-<td align="right">9</td>
-<td align="center">5</td>
+<td align="center">11</td>
+<td align="center">3</td>
+<td align="right">14</td>
+<td align="center">0</td>
 </tr>
 <tr class="odd">
 <td align="left">Thunder</td>
@@ -821,12 +821,12 @@ pr.less3 &lt;- nba.shilibang.test %&gt;% dplyr::filter(与PowerRanking差距 &lt
 <td align="center">9</td>
 </tr>
 <tr class="even">
-<td align="left">Bucks</td>
+<td align="left">TrailBlazers</td>
 <td align="right">16</td>
-<td align="center">11</td>
-<td align="center">5</td>
-<td align="right">14</td>
-<td align="center">2</td>
+<td align="center">12</td>
+<td align="center">4</td>
+<td align="right">12</td>
+<td align="center">4</td>
 </tr>
 <tr class="odd">
 <td align="left">Pelicans</td>
@@ -1081,21 +1081,21 @@ pct.pr.less3 &lt;- nba.shilibang.test %&gt;% dplyr::filter(胜率与PowerRanking
 <td align="center">3</td>
 </tr>
 <tr class="odd">
-<td align="left">TrailBlazers</td>
+<td align="left">Wizards</td>
 <td align="right">13</td>
 <td align="center">12</td>
 <td align="center">1</td>
-<td align="right">12</td>
-<td align="center">1</td>
-<td align="center">0</td>
+<td align="right">9</td>
+<td align="center">4</td>
+<td align="center">3</td>
 </tr>
 <tr class="even">
-<td align="left">Wizards</td>
+<td align="left">Bucks</td>
 <td align="right">14</td>
-<td align="center">12</td>
-<td align="center">2</td>
-<td align="right">9</td>
-<td align="center">5</td>
+<td align="center">11</td>
+<td align="center">3</td>
+<td align="right">14</td>
+<td align="center">0</td>
 <td align="center">3</td>
 </tr>
 <tr class="odd">
@@ -1108,13 +1108,13 @@ pct.pr.less3 &lt;- nba.shilibang.test %&gt;% dplyr::filter(胜率与PowerRanking
 <td align="center">11</td>
 </tr>
 <tr class="even">
-<td align="left">Bucks</td>
+<td align="left">TrailBlazers</td>
 <td align="right">16</td>
-<td align="center">11</td>
-<td align="center">5</td>
-<td align="right">14</td>
-<td align="center">2</td>
-<td align="center">3</td>
+<td align="center">12</td>
+<td align="center">4</td>
+<td align="right">12</td>
+<td align="center">4</td>
+<td align="center">0</td>
 </tr>
 <tr class="odd">
 <td align="left">Pelicans</td>
@@ -1274,7 +1274,7 @@ ggplot(nba.shilibang.test, aes(胜率与PowerRanking差距)) +
 </div>
 <div id="3" class="section level3">
 <h3>回顾目前3个排名</h3>
-<p>重新再回顾三个排名的情况，今天是Wed Dec 06 16:00:54 2017</p>
+<p>重新再回顾三个排名的情况，今天是Wed Dec 06 19:40:47 2017</p>
 <pre class="r"><code>nba.shilibang &lt;- left_join(nba.shilibang, table.pr[,c(&quot;球队&quot;,&quot;powerRanking&quot;)], by = &quot;球队&quot;) %&gt;%
   arrange(hgRanking)
 nba.shilibang %&gt;%  knitr::kable()</code></pre>
@@ -1361,16 +1361,16 @@ nba.shilibang %&gt;%  knitr::kable()</code></pre>
 <td align="right">11</td>
 </tr>
 <tr class="odd">
-<td align="left">TrailBlazers</td>
+<td align="left">Wizards</td>
 <td align="right">13</td>
 <td align="center">12</td>
-<td align="right">12</td>
+<td align="right">9</td>
 </tr>
 <tr class="even">
-<td align="left">Wizards</td>
+<td align="left">Bucks</td>
 <td align="right">14</td>
-<td align="center">12</td>
-<td align="right">9</td>
+<td align="center">11</td>
+<td align="right">14</td>
 </tr>
 <tr class="odd">
 <td align="left">Thunder</td>
@@ -1379,10 +1379,10 @@ nba.shilibang %&gt;%  knitr::kable()</code></pre>
 <td align="right">6</td>
 </tr>
 <tr class="even">
-<td align="left">Bucks</td>
+<td align="left">TrailBlazers</td>
 <td align="right">16</td>
-<td align="center">11</td>
-<td align="right">14</td>
+<td align="center">12</td>
+<td align="right">12</td>
 </tr>
 <tr class="odd">
 <td align="left">Pelicans</td>

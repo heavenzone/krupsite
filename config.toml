@@ -11,6 +11,7 @@ hasCJKLanguage = true
 summaryLength = 140
 
 
+
 [indexes]
   tag = "tags"
   topic = "topics"
@@ -27,8 +28,8 @@ summaryLength = 140
   highlightjsLang = ["r", "yaml"]
   highlightjs = "zenburn"
   dateFormat = "2006-01-02"
-
-
+  description = "ZhongHaoGuang's Blog, 钟浩光的个人博客"
+  keywords = "钟浩光, R语言"
   
   
 [menu]
