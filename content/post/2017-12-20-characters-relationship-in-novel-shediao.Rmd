@@ -21,6 +21,9 @@ knitr::opts_chunk$set(
 )
 ```
 
+<script src="/js/wordcloud2-all.js"></script>
+<script src="/js/hover.js"></script>
+<script src="/js/wordcloud2.js"></script>
 
 ## 简介
 
@@ -164,7 +167,7 @@ freqTable %>% head
 
 
 ```{r}
-wordcloud2(freqTable, backgroundColor = 'black')
+wordcloud2(freqTable, color = "random-light", backgroundColor = 'black')
 ```
 
 
@@ -196,7 +199,7 @@ renwuWords <- fread(file = "../../data/20171220-shediao/金庸人名.scel.txt",
                     encoding = "UTF-8")
 freqRenwu2 = freqRenwu[freqRenwu$char%in%renwuWords[["V1"]],]
 freqRenwu2 %>% dim
-wordcloud2(freqRenwu2, backgroundColor = 'grey25')
+wordcloud2(freqRenwu2, color = "random-light", backgroundColor = 'grey25')
 ```
 
 
