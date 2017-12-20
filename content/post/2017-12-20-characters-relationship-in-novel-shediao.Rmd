@@ -169,7 +169,9 @@ freqTable %>% head
 
 
 ```{r}
-wordcloud2(freqTable, color = "random-light", backgroundColor = 'black')
+library(widgetframe)
+ts <- wordcloud2(freqTable, color = "random-light", backgroundColor = 'black')
+frameWidget(ts)
 ```
 
 
