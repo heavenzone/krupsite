@@ -22,9 +22,6 @@ knitr::opts_chunk$set(
 ```
 
 
-<script src="/js/wordcloud2-all.js"></script>
-<script src="/js/hover.js"></script>
-<script src="/js/wordcloud2.js"></script>
 
 
 ## 简介
