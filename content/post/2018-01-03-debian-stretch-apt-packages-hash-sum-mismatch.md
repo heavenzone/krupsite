@@ -44,6 +44,8 @@ Acquire::http::No-Cache true;
 Acquire::BrokenProxy    true;
 ```
 
+成功！
+
 ## 未试方法
 
 未试这个办法，不知道apt-key update能否解决。
