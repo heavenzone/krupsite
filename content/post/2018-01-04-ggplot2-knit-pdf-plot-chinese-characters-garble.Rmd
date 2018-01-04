@@ -37,8 +37,8 @@ ggplot(head(diamonds,100),aes(x, y)) +
   ylab("中文3")
 ```
 
-![](../../images/2018-01-04-noGB1-1.png)
-![](../../images/2018-01-04-noGB1-2.png)
+![](/images/2018-01-04-noGB1-1.png)
+![](/images/2018-01-04-noGB1-2.png)
 
 
 ## 解决办法
