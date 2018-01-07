@@ -1,0 +1,73 @@
+---
+title: 笔记-R语言get函数
+author: Heaven Zone
+date: '2018-01-06'
+slug: r-get-function
+categories:
+  - R
+tags:
+  - R
+---
+
+
+
+<div class="section level2">
+<h2>问题描述</h2>
+<ul>
+<li>变量<code>name</code>的内容为<code>Jordan</code></li>
+<li>字符串变量<code>a</code>的内容为<code>name</code></li>
+</ul>
+<p>我们要通过<code>a</code>获取到<code>Jordan</code>。</p>
+</div>
+<div class="section level2">
+<h2>解决办法</h2>
+<pre class="r"><code>name &lt;- &quot;Jordan&quot;
+a &lt;- &quot;name&quot;
+get(a)</code></pre>
+<pre><code>## [1] &quot;Jordan&quot;</code></pre>
+</div>
+<div id="get" class="section level2">
+<h2>get应用</h2>
+<div id="1" class="section level3">
+<h3>应用1</h3>
+<pre class="r"><code>name &lt;- &quot;Jordan&quot;
+address &lt;- &quot;北京&quot;
+tel &lt;- &quot;13800138000&quot;
+number &lt;- 23
+
+str.seq &lt;- c(&#39;name&#39;, &#39;address&#39;, &#39;tel&#39;, &quot;number&quot;)
+
+for(i in str.seq) {
+    print(i)
+}</code></pre>
+<pre><code>## [1] &quot;name&quot;
+## [1] &quot;address&quot;
+## [1] &quot;tel&quot;
+## [1] &quot;number&quot;</code></pre>
+<pre class="r"><code>for(i in str.seq) {
+    print(get(i))
+}</code></pre>
+<pre><code>## [1] &quot;Jordan&quot;
+## [1] &quot;北京&quot;
+## [1] &quot;13800138000&quot;
+## [1] 23</code></pre>
+</div>
+<div class="section level3">
+<h3>应用二</h3>
+<pre class="r"><code>library(tidyverse)
+testFun &lt;- function(df, groupby, colToSum) {
+    df %&gt;% group_by(get(groupby)) %&gt;%
+    summarise(value = sum(get(colToSum))) %&gt;%
+    return()
+}
+diamonds %&gt;% testFun(&quot;cut&quot;, &quot;price&quot;)</code></pre>
+<pre><code>## # A tibble: 5 x 2
+##   `get(groupby)`    value
+##            &lt;ord&gt;    &lt;int&gt;
+## 1           Fair  7017600
+## 2           Good 19275009
+## 3      Very Good 48107623
+## 4        Premium 63221498
+## 5          Ideal 74513487</code></pre>
+</div>
+</div>

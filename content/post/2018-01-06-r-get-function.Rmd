@@ -1,0 +1,79 @@
+---
+title: 笔记-R语言get函数
+author: Heaven Zone
+date: '2018-01-06'
+slug: r-get-function
+categories:
+  - R
+tags:
+  - R
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+## 问题描述
+
+- 变量`name`的内容为`Jordan`
+- 字符串变量`a`的内容为`name`
+
+我们要通过`a`获取到`Jordan`。
+
+## 解决办法
+
+```{r}
+name <- "Jordan"
+a <- "name"
+get(a)
+```
+
+## get应用
+
+### 应用1
+
+```{r}
+name <- "Jordan"
+address <- "北京"
+tel <- "13800138000"
+number <- 23
+
+str.seq <- c('name', 'address', 'tel', "number")
+
+for(i in str.seq) {
+	print(i)
+}
+
+for(i in str.seq) {
+	print(get(i))
+}
+```
+
+
+### 应用二
+
+```{r}
+library(tidyverse)
+testFun <- function(df, groupby, colToSum) {
+	df %>% group_by(get(groupby)) %>%
+    summarise(value = sum(get(colToSum))) %>%
+    return()
+}
+diamonds %>% testFun("cut", "price")
+```
+
+
+
+
+
+
+
+
+
+
+
+
