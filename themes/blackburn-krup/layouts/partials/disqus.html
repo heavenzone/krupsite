@@ -24,7 +24,7 @@
 -->
 
 
-<div id="gitment-container"></div>
+<div id="commment-container"></div>
 <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
 <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
 <script>
@@ -35,7 +35,7 @@ var gitment = new Gitment({
   oauth: {
     client_id: "{{ .Site.Params.gitment_client_id }}",
     client_secret: "{{ .Site.Params.gitment_client_secret }}",
-  }，
+  },
 })
-gitment.render('gitment-container')
+gitment.render('commment-container')
 </script>
