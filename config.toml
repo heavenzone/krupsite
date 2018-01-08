@@ -22,15 +22,20 @@ summaryLength = 140
   subtitle = "have fun"
   brand = "HG's BLOG"
   googleAnalytics = "Your Google Analytics tracking ID"
-  disqus = "YouYan"
+  disqus = "gitment"
   # CSS name for highlight.js
   #highlightjs = "ocean,routeros"
-  highlightjsLang = ["r", "yaml"]
+  highlightjsLang = ["r", "yaml", "bash"]
   highlightjs = "zenburn"
   dateFormat = "2006-01-02"
   description = "ZhongHaoGuang's Blog, 钟浩光的个人博客"
   keywords = "钟浩光, R语言"
-  
+  # for gitment
+  gitment_id = "location.href"
+  gitment_owner = "heavenzone"
+  gitment_repo = "krupsite"
+  gitment_client_id = "d056ce29de7f2573b45e"
+  gitment_client_secret = "c553a020b1c67375df8ecc1588675f6e83f43753"
   
 [menu]
   # Shown in the side menu.
