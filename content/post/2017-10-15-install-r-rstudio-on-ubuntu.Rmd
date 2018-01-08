@@ -39,7 +39,7 @@ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8D5A09DC9B929006
 
 把麒麟那几行用`#`注释掉
 
-```bash
+```Bash
 # deb file:///media/kylin/Kylin-4.0.2 juniper main
 # deb http://cn.archive.ubuntu.com/ubuntu/ main univer multivers restricted
 # deb http://archive.kylinos.cn/yhkylin/ juniper main restricted universe multiverse
@@ -63,7 +63,7 @@ deb http://cran.rstudio.com/bin/linux/ubuntu zesty/
 
 然后输入下面代码更新软件列表
 
-```
+```Bash
 sudo apt-get update
 ```
 
@@ -80,11 +80,13 @@ sudo apt-get update
 
 在终端输入以下命令安装ibus：
 
-```shell
+```Bash
 sudo apt-get install ibus ibus-clutter ibus-gtk ibus-gtk3 ibus-qt4
 ```
+
 ### 卸载fcitx
-```
+
+```Bash
 sudo apt-get remove fcitx
 ```
 
@@ -96,7 +98,7 @@ sudo apt-get remove fcitx
 
 打开**下载**文件夹，双击文件`yong-lin-2.4.0-0.7z`，然后像windows下面操作一样把它解压到当前文件夹就可以了，然后执行以下命令：
 
-```
+```Bash
 cd ~/下载/yong
 # 下面这句可不输入，如果yong-tool.sh没有可执行权限才运行这条语句
 chmod a+x yong-tool.sh 
@@ -105,7 +107,7 @@ sudo ./yong-tool.sh –install64
 
 可以下载一个**ChmSee**软件来查看压缩包里面的帮助文档**yong.chm**，先安装一些依赖包：
 
-```
+```Bash
 sudo apt-get install libc6 libchm1 libgdk-pixbuf2.0-0 libpango1.0-0
 sudo apt-get install libglib2.0-0 libgtk2.0-0 libwebkitgtk-1.0-0 libxml2
 ```
@@ -206,7 +208,7 @@ sudo apt-get install libcairo2-dev libxt-dev
 
 然后在rstudio安装Cairo包，下面代码在Rstudio的R命令行输入：
 
-```
+```r
 install.packages("Cairo")
 ```
 
@@ -218,14 +220,14 @@ sudo apt-get install libxml2-dev
 
 然后在rstudio安装XML包，下面代码在Rstudio的R命令行输入：
 
-```
+```r
 install.packages("XML")
 ```
 
 
 再安装一些经常用到的R包
 
-```
+```r
 install.packages("formatR")
 install.packages("openxlsx")
 install.packages("ggplot2")
@@ -340,7 +342,7 @@ sudo apt-get install gconf2
 2. 选择**tar.gz适用于linux**，点下载
 3. 双击下载的文件解压
 
-```shell
+```bash
 cd ~/下载/flash_player_npapi_linux.x86_64/
 sudo cp -r usr/* /usr
 sudo cp 下载/flash_player_npapi_linux.x86_64/libflashplayer.so /usr/lib/mozilla/plugins/
@@ -361,7 +363,7 @@ sudo cp 下载/flash_player_npapi_linux.x86_64/libflashplayer.so /usr/lib/mozill
 
 - 参考这里：[文档](https://github.com/electron/electron/blob/master/docs-translations/zh-CN/project/README.md)
 
-```shell
+```bash
 sudo apt-get install npm
 sudo apt-get install cnpm
 sudo apt-get install git

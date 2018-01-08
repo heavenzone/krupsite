@@ -54,7 +54,7 @@ deb http://cn.archive.ubuntu.com/ubuntu/ trusty-backports main restricted univer
 # rstudio源
 deb http://cran.rstudio.com/bin/linux/ubuntu zesty/</code></pre>
 <p>然后输入下面代码更新软件列表</p>
-<pre><code>sudo apt-get update</code></pre>
+<pre class="bash"><code>sudo apt-get update</code></pre>
 </div>
 <div id="yong" class="section level2">
 <h2>安装yong输入法</h2>
@@ -68,23 +68,23 @@ deb http://cran.rstudio.com/bin/linux/ubuntu zesty/</code></pre>
 <div id="ibus" class="section level3">
 <h3>安装iBus框架</h3>
 <p>在终端输入以下命令安装ibus：</p>
-<pre class="shell"><code>sudo apt-get install ibus ibus-clutter ibus-gtk ibus-gtk3 ibus-qt4</code></pre>
+<pre class="bash"><code>sudo apt-get install ibus ibus-clutter ibus-gtk ibus-gtk3 ibus-qt4</code></pre>
 </div>
 <div id="fcitx" class="section level3">
 <h3>卸载fcitx</h3>
-<pre><code>sudo apt-get remove fcitx</code></pre>
+<pre class="bash"><code>sudo apt-get remove fcitx</code></pre>
 <p>听说这里先安装ibus，再卸载fcitx，这个先后顺序是有必要的，否则会导致系统无法启动，幸好，我当时的安装顺序就是这个顺序，因此也没有遇到该问题。</p>
 </div>
 <div id="yong" class="section level3">
 <h3>安装yong小小输入法</h3>
 <p>参考官网说明：<a href="http://yong.dgod.net/read.php?tid=6;fpage=2">点这里</a></p>
 <p>打开<strong>下载</strong>文件夹，双击文件<code>yong-lin-2.4.0-0.7z</code>，然后像windows下面操作一样把它解压到当前文件夹就可以了，然后执行以下命令：</p>
-<pre><code>cd ~/下载/yong
+<pre class="bash"><code>cd ~/下载/yong
 # 下面这句可不输入，如果yong-tool.sh没有可执行权限才运行这条语句
 chmod a+x yong-tool.sh 
 sudo ./yong-tool.sh –install64</code></pre>
 <p>可以下载一个<strong>ChmSee</strong>软件来查看压缩包里面的帮助文档<strong>yong.chm</strong>，先安装一些依赖包：</p>
-<pre><code>sudo apt-get install libc6 libchm1 libgdk-pixbuf2.0-0 libpango1.0-0
+<pre class="bash"><code>sudo apt-get install libc6 libchm1 libgdk-pixbuf2.0-0 libpango1.0-0
 sudo apt-get install libglib2.0-0 libgtk2.0-0 libwebkitgtk-1.0-0 libxml2</code></pre>
 <p>下载libgcrypt11，<a href="http://launchpadlibrarian.net/279485070/libgcrypt11_1.5.3-2ubuntu4.4_amd64.deb">点这里下载</a></p>
 <p>下载chmsee，<a href="http://kr.archive.ubuntu.com/ubuntu/pool/universe/c/chmsee/chmsee_1.3.0-2ubuntu2_amd64.deb">点此下载</a></p>
@@ -153,13 +153,13 @@ sudo gdebi -n rstudio-xenial-1.1.375-amd64.deb</code></pre>
 <p>安装r的Cairo包前先在ubuntu终端安装两个库文件</p>
 <pre class="bash"><code>sudo apt-get install libcairo2-dev libxt-dev</code></pre>
 <p>然后在rstudio安装Cairo包，下面代码在Rstudio的R命令行输入：</p>
-<pre><code>install.packages(&quot;Cairo&quot;)</code></pre>
+<pre class="r"><code>install.packages(&quot;Cairo&quot;)</code></pre>
 <p>安装XML包前，现在ubuntu安装libxml2-dev</p>
 <pre class="shell"><code>sudo apt-get install libxml2-dev</code></pre>
 <p>然后在rstudio安装XML包，下面代码在Rstudio的R命令行输入：</p>
-<pre><code>install.packages(&quot;XML&quot;)</code></pre>
+<pre class="r"><code>install.packages(&quot;XML&quot;)</code></pre>
 <p>再安装一些经常用到的R包</p>
-<pre><code>install.packages(&quot;formatR&quot;)
+<pre class="r"><code>install.packages(&quot;formatR&quot;)
 install.packages(&quot;openxlsx&quot;)
 install.packages(&quot;ggplot2&quot;)
 install.packages(&quot;reshape2&quot;)
@@ -246,7 +246,7 @@ Sys.setlocale(&quot;LC_ALL&quot;,&quot;English&quot;)</code></pre>
 <li>选择<strong>tar.gz适用于linux</strong>，点下载</li>
 <li>双击下载的文件解压</li>
 </ol>
-<pre class="shell"><code>cd ~/下载/flash_player_npapi_linux.x86_64/
+<pre class="bash"><code>cd ~/下载/flash_player_npapi_linux.x86_64/
 sudo cp -r usr/* /usr
 sudo cp 下载/flash_player_npapi_linux.x86_64/libflashplayer.so /usr/lib/mozilla/plugins/</code></pre>
 <p>打开firefox的<strong>Add-ons Manager</strong>的<strong>Plugins</strong>，看到了<strong>Shockwave Flash 27.0 r0</strong>，说明已经成功加载了flash了。</p>
@@ -264,7 +264,7 @@ sudo cp 下载/flash_player_npapi_linux.x86_64/libflashplayer.so /usr/lib/mozill
 <ul>
 <li>参考这里：<a href="https://github.com/electron/electron/blob/master/docs-translations/zh-CN/project/README.md">文档</a></li>
 </ul>
-<pre class="shell"><code>sudo apt-get install npm
+<pre class="bash"><code>sudo apt-get install npm
 sudo apt-get install cnpm
 sudo apt-get install git
 sudo apt-get install nodejs-legacy
