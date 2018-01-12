@@ -1,0 +1,113 @@
+---
+title: 用corrplot和ggcorrplot画相关分析图
+author: Heaven Zone
+date: '2018-01-09'
+slug: corr-plot-usage
+categories:
+  - R
+  - plot
+tags:
+  - R
+  - ggcorrplot
+  - corrplot
+  - plot
+---
+
+
+
+<div class="section level2">
+<h2>问题描述</h2>
+<p>画变量之间的相关图。</p>
+</div>
+<div id="ggcorrplot" class="section level2">
+<h2>解决办法一：ggcorrplot</h2>
+<div class="section level3">
+<h3>安装包</h3>
+<pre class="r"><code>install.packages(&quot;ggcorrplot&quot;)
+
+#== 或
+
+if(!require(devtools)) install.packages(&quot;devtools&quot;)
+devtools::install_github(&quot;kassambara/ggcorrplot&quot;)</code></pre>
+</div>
+<div id="packages" class="section level3">
+<h3>载入packages</h3>
+<pre class="r"><code>library(ggcorrplot)</code></pre>
+</div>
+<div class="section level3">
+<h3>准备数据</h3>
+<pre class="r"><code>data(mtcars)
+corr &lt;- round(cor(mtcars), 1)
+head(corr[, 1:6])</code></pre>
+<pre><code>##       mpg  cyl disp   hp drat   wt
+## mpg   1.0 -0.9 -0.8 -0.8  0.7 -0.9
+## cyl  -0.9  1.0  0.9  0.8 -0.7  0.8
+## disp -0.8  0.9  1.0  0.8 -0.7  0.9
+## hp   -0.8  0.8  0.8  1.0 -0.4  0.7
+## drat  0.7 -0.7 -0.7 -0.4  1.0 -0.7
+## wt   -0.9  0.8  0.9  0.7 -0.7  1.0</code></pre>
+<pre class="r"><code>#== 用来剔除不相关
+#== 计算pvalue
+p.mat &lt;- cor_pmat(mtcars)
+head(p.mat[, 1:4])</code></pre>
+<pre><code>##               mpg          cyl         disp           hp
+## mpg  0.000000e+00 6.112687e-10 9.380327e-10 1.787835e-07
+## cyl  6.112687e-10 0.000000e+00 1.802838e-12 3.477861e-09
+## disp 9.380327e-10 1.802838e-12 0.000000e+00 7.142679e-08
+## hp   1.787835e-07 3.477861e-09 7.142679e-08 0.000000e+00
+## drat 1.776240e-05 8.244636e-06 5.282022e-06 9.988772e-03
+## wt   1.293959e-10 1.217567e-07 1.222320e-11 4.145827e-05</code></pre>
+</div>
+<div class="section level3">
+<h3>画图</h3>
+<pre class="r"><code>#== 默认作图
+ggcorrplot(corr)</code></pre>
+<p><img src="/post/2018-01-09-corrplot-ggcorrplot-usage_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code>#== 加上tag
+ggcorrplot(corr, hc.order = TRUE, type = &quot;lower&quot;,
+   lab = TRUE)</code></pre>
+<p><img src="/post/2018-01-09-corrplot-ggcorrplot-usage_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
+<pre class="r"><code>#== 剔除不相关
+ggcorrplot(corr, hc.order = TRUE,
+    type = &quot;lower&quot;, p.mat = p.mat)</code></pre>
+<p><img src="/post/2018-01-09-corrplot-ggcorrplot-usage_files/figure-html/unnamed-chunk-3-3.png" width="672" /></p>
+<pre class="r"><code>#== 剔除不相关，留白
+ggcorrplot(corr, p.mat = p.mat, hc.order = TRUE,
+    type = &quot;lower&quot;, insig = &quot;blank&quot;)</code></pre>
+<p><img src="/post/2018-01-09-corrplot-ggcorrplot-usage_files/figure-html/unnamed-chunk-3-4.png" width="672" /></p>
+</div>
+</div>
+<div id="corrplot" class="section level2">
+<h2>解决办法二：corrplot</h2>
+<div id="corrplot" class="section level3">
+<h3>安装corrplot</h3>
+<pre class="r"><code>install.packages(&quot;corrplot&quot;)</code></pre>
+</div>
+<div class="section level3">
+<h3>作图</h3>
+<pre class="r"><code>library(&quot;corrplot&quot;)
+corrplot(corr, method=&quot;circle&quot;)</code></pre>
+<p><img src="/post/2018-01-09-corrplot-ggcorrplot-usage_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>#== 排序
+corrplot(corr, type=&quot;upper&quot;, order=&quot;hclust&quot;, col=c(&quot;black&quot;, &quot;white&quot;),
+         bg=&quot;lightblue&quot;)</code></pre>
+<p><img src="/post/2018-01-09-corrplot-ggcorrplot-usage_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+<pre class="r"><code>#== 剔除不相关，置信度0.95
+corrplot(corr, type=&quot;upper&quot;, order=&quot;hclust&quot;, 
+         p.mat = p.mat, sig.level = 0.05)</code></pre>
+<p><img src="/post/2018-01-09-corrplot-ggcorrplot-usage_files/figure-html/unnamed-chunk-4-3.png" width="672" /></p>
+<pre class="r"><code>#== 剔除不相关，留白，置信度0.99
+corrplot(corr, type=&quot;upper&quot;, order=&quot;hclust&quot;, 
+         p.mat = p.mat, sig.level = 0.01, insig = &quot;blank&quot;)</code></pre>
+<p><img src="/post/2018-01-09-corrplot-ggcorrplot-usage_files/figure-html/unnamed-chunk-4-4.png" width="672" /></p>
+<pre class="r"><code>#== 加上标签
+corrplot(corr, method=&quot;color&quot;, 
+         type=&quot;upper&quot;, order=&quot;hclust&quot;, 
+         addCoef.col = &quot;black&quot;, # 添加标签
+         tl.col=&quot;black&quot;, tl.srt=45,
+         p.mat = p.mat, sig.level = 0.01, insig = &quot;blank&quot;, 
+         diag=FALSE 
+         )</code></pre>
+<p><img src="/post/2018-01-09-corrplot-ggcorrplot-usage_files/figure-html/unnamed-chunk-4-5.png" width="672" /></p>
+</div>
+</div>

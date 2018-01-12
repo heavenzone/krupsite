@@ -1,0 +1,129 @@
+---
+title: 用corrplot和ggcorrplot画相关分析图
+author: Heaven Zone
+date: '2018-01-09'
+slug: corr-plot-usage
+categories:
+  - R
+  - plot
+tags:
+  - R
+  - ggcorrplot
+  - corrplot
+  - plot
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+library(tidyverse)
+```
+
+
+## 问题描述
+
+画变量之间的相关图。
+
+## 解决办法一：ggcorrplot
+
+### 安装包
+
+```r
+install.packages("ggcorrplot")
+
+#== 或
+
+if(!require(devtools)) install.packages("devtools")
+devtools::install_github("kassambara/ggcorrplot")
+```
+
+### 载入packages
+
+```{r}
+library(ggcorrplot)
+```
+### 准备数据
+
+```{r}
+data(mtcars)
+corr <- round(cor(mtcars), 1)
+head(corr[, 1:6])
+
+#== 用来剔除不相关
+#== 计算pvalue
+p.mat <- cor_pmat(mtcars)
+head(p.mat[, 1:4])
+```
+### 画图
+
+```{r}
+#== 默认作图
+ggcorrplot(corr)
+
+
+#== 加上tag
+ggcorrplot(corr, hc.order = TRUE, type = "lower",
+   lab = TRUE)
+
+#== 剔除不相关
+ggcorrplot(corr, hc.order = TRUE,
+    type = "lower", p.mat = p.mat)
+
+#== 剔除不相关，留白
+ggcorrplot(corr, p.mat = p.mat, hc.order = TRUE,
+    type = "lower", insig = "blank")
+```
+
+
+
+
+
+## 解决办法二：corrplot
+
+### 安装corrplot
+
+```r
+install.packages("corrplot")
+```
+
+### 作图
+
+```{r}
+library("corrplot")
+corrplot(corr, method="circle")
+
+#== 排序
+corrplot(corr, type="upper", order="hclust", col=c("black", "white"),
+         bg="lightblue")
+
+#== 剔除不相关，置信度0.95
+corrplot(corr, type="upper", order="hclust", 
+         p.mat = p.mat, sig.level = 0.05)
+
+#== 剔除不相关，留白，置信度0.99
+corrplot(corr, type="upper", order="hclust", 
+         p.mat = p.mat, sig.level = 0.01, insig = "blank")
+
+#== 加上标签
+corrplot(corr, method="color", 
+         type="upper", order="hclust", 
+         addCoef.col = "black", # 添加标签
+         tl.col="black", tl.srt=45,
+         p.mat = p.mat, sig.level = 0.01, insig = "blank", 
+         diag=FALSE 
+         )
+```
+
+
+
+
+
+
+
+
+
+
+

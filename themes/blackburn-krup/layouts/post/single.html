@@ -3,18 +3,20 @@
   <h1>{{ .Title }}</h1>
   <h2>{{ .Description }}</h2>
 </div>
-<div class="content">
+<div id="post-content" class="content">
 
   {{ partial "post_meta.html" . }}
 
+{{ if .Params.simpletoc }}
+  {{ partial "simpletoc.html" . }}
+{{ end }}  
+  
   {{ .Content }}
-
   {{ partial "prev_next_post.html" . }}
-
   {{ partial "disqus.html" . }}
-
 </div>
 
+<!-- modified by krup -->
   {{ with .Site.Params.highlightjs }}
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/{{ . }}.min.css">
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>

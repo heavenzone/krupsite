@@ -9,6 +9,7 @@ tags:
   - ArchLinux
 description: 'ArchLinux安装记录（精简版）'
 topics: []
+simpletoc: true
 ---
 
 

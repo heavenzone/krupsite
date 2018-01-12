@@ -1,0 +1,19 @@
+<script src="/js/simpletoc.js"></script>
+<script>
+	var firstLvl = 2; // h2开始
+	var lastLvl = 4;  // h4结束
+	var divID = "TOC";
+	var divToSearch = "post-content";
+	window.onload=function(){
+		//参数控制
+		// 参数一：起始level，默认为h2
+		// 参数二：末位Level，默认为h3
+		// 参数三：用于生成toc的divID，默认为TOC
+		// 参数四：搜索headlines的divID
+		toc(firstLvl, lastLvl, divID, divToSearch);
+		diyStyle(divID);
+		addNewStyle('@media (max-width: 48em) {#'+divID+'{display: none;} }');
+		addNewStyle('.TOCSectNum {margin-right: 0.5em;}');
+	}
+</script>
+<div id="TOC"></div>
