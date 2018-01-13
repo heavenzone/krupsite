@@ -63,7 +63,7 @@ simpletoc: true
 
 ### 修改js文件
 
-修改[上面所说的文档](https://www.cnblogs.com/qiudeqing/p/3229583.html)办成了下面这个样子：
+修改[上面所说的文档](https://www.cnblogs.com/qiudeqing/p/3229583.html)变成了下面这个样子：
 
 ```javascript
  /**
