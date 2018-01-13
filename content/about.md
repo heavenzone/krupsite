@@ -12,7 +12,7 @@ date: "2017-10-05"
 感谢Yihui！
 
 - [**blogdown**](https://github.com/rstudio/blogdown)
-- [**Yihui Xie's**](https://github.com/yihui/hugo-lithium-theme) Blog
+- [**Yihui Xie's**](https://yihui.name/) Blog
 
 
 ## 更新历史
