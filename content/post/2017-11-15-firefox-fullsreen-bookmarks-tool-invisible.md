@@ -44,6 +44,12 @@ topics: []
 
 打开firefox，按`F11`进入全屏模式，书签工具栏**出来了**。
 
+
+## 全屏显示标签
+
+全屏模式下还有一个问题是标签地址栏等都会自动隐藏，要把它们显示出来而不自动隐藏，可以在地址栏输入`about:config`，然后搜索`browser.fullscreen.autohide`，设置为**false**就可以了。
+
+
 ## 参考资料
 
 1. <https://askubuntu.com/questions/639206/firefox-show-bookmark-toolbar-in-fullscreen-mode>
