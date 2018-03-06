@@ -10,7 +10,8 @@ tags:
   - RMySQL
   - 中文问题
 description: 'RMySQL使用方法以及中文乱码问题'
-simpletoc: true
+showchapter: true
+showtoc: true
 ---
 
 ## 连接MySql

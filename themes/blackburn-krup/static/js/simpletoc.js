@@ -40,7 +40,7 @@ function isInArray(value, arr)
     return false;
 }
 
-function toc(firstLevel = 2, lastLevel = 3, divID = "TOC", divToSearch = "")
+function toc(firstLevel = 2, lastLevel = 3, divID = "TOC", divToSearch = "", chapterNum = true, showtoc = true)
 {
 
     // 如果参数设置不正确的调整
@@ -123,7 +123,9 @@ function toc(firstLevel = 2, lastLevel = 3, divID = "TOC", divToSearch = "")
             var span = document.createElement("span");
         span.className = "TOCSectNum";
         span.innerHTML = sectionNumber;
-        heading.insertBefore(span, heading.firstChild);
+        if(chapterNum) {
+          heading.insertBefore(span, heading.firstChild);
+        }
         //===============改成直接在headlines上添加id用于链接跳转
         heading.setAttribute("id", divID + sectionNumber);
 
@@ -144,7 +146,9 @@ function toc(firstLevel = 2, lastLevel = 3, divID = "TOC", divToSearch = "")
         entry.className = "TOCEntry TOCLevel" + level;
         entry.appendChild(link);
         // And add the div to the TOC container.
-        toc.appendChild(entry);
+        if(showtoc){
+          toc.appendChild(entry);
+        }
     }
 }
 
@@ -152,7 +156,6 @@ function toc(firstLevel = 2, lastLevel = 3, divID = "TOC", divToSearch = "")
 function addNewStyle(newStyle)
 {
     var styleElement = document.getElementById('styles_js');
-
     if (!styleElement)
     {
         styleElement = document.createElement('style');
