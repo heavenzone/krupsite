@@ -17,7 +17,7 @@
 </div>
 
 <!-- modified by krup -->
-{{ if and (not .Params.disable_mathjax) (or (in (string .Content) "\\") (in (string .Content) "$")) }}
+{{ if eq .Params.mathjax true}}
 <script src="{{ .Site.BaseURL }}js/mathcode.js"></script>
 <script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 {{ end }}

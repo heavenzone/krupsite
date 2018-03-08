@@ -1,6 +1,11 @@
 </div>
 </div>
-
+<script src="//cdn.bootcss.com/pangu/3.3.0/pangu.min.js"></script>
+<script>
+  pangu.spacingPage();
+  pangu.spacingElementById('main');
+  pangu.spacingElementByTagName('p');
+</script>
 {{ partial "google_analytics.html" . }}
 </body>
 </html>
