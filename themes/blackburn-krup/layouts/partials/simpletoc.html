@@ -11,7 +11,7 @@
 		// 参数三：用于生成toc的divID，默认为TOC
 		// 参数四：搜索headlines的divID
 		
-		toc(firstLvl, lastLvl, divID, divToSearch, {{if isset .Params "showchapter"}}{{.Params.showchapter}}{{else}}{{false}}{{end}}, {{if isset .Params "showtoc"}}{{.Params.showtoc}}{{else}}{{false}}{{end}});
+		toc(firstLvl, lastLvl, divID, divToSearch, {{if isset .Params "showchapter"}}{{.Params.showchapter}}{{else}}{{true}}{{end}}, {{if isset .Params "showtoc"}}{{.Params.showtoc}}{{else}}{{true}}{{end}});
 		diyStyle(divID);
 		addNewStyle('@media (max-width: 48em) {#'+divID+'{display: none;} }');
 		addNewStyle('@media (max-width: 64em) {#'+divID+'{display: none;} }');

@@ -5,25 +5,29 @@
 </div>
 <div id="post-content" class="content">
 
-  {{ partial "post_meta.html" . }}
+{{ partial "post_meta.html" . }}
 {{$b := or .Params.simpletoc (or (isset .Params "showchapter") (isset .Params "showtoc"))}}
 {{ if ($b) }}
   {{ partial "simpletoc.html" . }}
 {{ end }}  
   
-  {{ .Content }}
-  {{ partial "prev_next_post.html" . }}
-  {{ partial "disqus.html" . }}
+{{ .Content }}
+{{ partial "prev_next_post.html" . }}
+{{ partial "disqus.html" . }}
 </div>
 
 <!-- modified by krup -->
-  {{ with .Site.Params.highlightjs }}
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/{{ . }}.min.css">
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-  {{ range $.Site.Params.highlightjs_extra_languages }}
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/{{ . }}.min.js"></script>
-  {{ end }}
-  <script>hljs.initHighlightingOnLoad();</script>
-  {{ end }}
+{{ if and (not .Params.disable_mathjax) (or (in (string .Content) "\\") (in (string .Content) "$")) }}
+<script src="{{ .Site.BaseURL }}js/mathcode.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+{{ end }}
+
+{{ if and (not .Params.disable_highlight) (in (string .Content) "</pre>") }}
+<script src="{{ .Site.BaseURL }}js/highlight.pack.js"></script>
+<script>
+hljs.configure({languages: []});
+hljs.initHighlightingOnLoad();
+</script>
+{{ end }}
 
 {{ partial "footer.html" . }}

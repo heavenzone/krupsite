@@ -10,13 +10,14 @@ tags:
   - RMySQL
   - 中文问题
 description: 'RMySQL使用方法以及中文乱码问题'
+keywords: ["R", "RMySQL"]
 showchapter: true
 showtoc: true
 ---
 
 ## 连接MySql
 
-```
+```r
 #install.packages("RMySQL")
 library(RMySQL)
 drv <- dbDriver("MySQL") 
@@ -42,7 +43,7 @@ dbFetch(res)
 - 操作系统：win10
 - R: Sys.getlocale()
 
-```
+```r
 Sys.getlocale()
 [1] "LC_COLLATE=Chinese (Simplified)_China.936;LC_CTYPE=Chinese (Simplified)_China.936;LC_MONETARY=Chinese (Simplified)_China.936;LC_NUMERIC=C;LC_TIME=Chinese (Simplified)_China.936"
 ```
@@ -51,7 +52,7 @@ Sys.getlocale()
 
 该函数主要是处理编码的问题，用到了`iconv`函数，对数据框转换编码的时候比较怪的地方是，需要转换两次，写入mysql数据库是才能显示，如果只转换一次，写入mysql后为空，但是数据框的列标题则只需转换一次就可以了。
 
-```
+```r
 library(RMySQL)
 drv <- dbDriver("MySQL") 
 options(encoding="utf8")
@@ -83,7 +84,7 @@ dbDisconnect(con)
 
 把数据框保存为utf-8编码的csv文件，然后用dbWriteTable直接读取文件来写入mysql数据库，从而解决中文问题。
 
-```
+```r
 library(RMySQL)
 drv <- dbDriver("MySQL") 
 con <- RMySQL::dbConnect(drv, dbname = "blog", host="127.0.0.1", port=3306, username="root", password="123qweasdzxc")
@@ -101,7 +102,7 @@ dbDisconnect(con)
 
 ## 从MySql数据库获取数据
 
-```
+```r
 library(RMySQL)
 drv <- dbDriver("MySQL") 
 con <- RMySQL::dbConnect(drv, dbname = "blog", host="127.0.0.1", port=3306, username="root", password="password")
@@ -135,7 +136,7 @@ dbDisconnect(con)
 
 ## 插入数据
 
-```
+```r
 drv <- dbDriver("MySQL") 
 con <- RMySQL::dbConnect(drv, dbname = "blog", host="127.0.0.1", port=3306, username="root", password="password")
 # 这里设置成gbk，插入数据就不会乱码（数据库编码为utf8）

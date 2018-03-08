@@ -170,12 +170,12 @@ function diyStyle(divID)
 {
     addNewStyle('#' + divID + ' .TOCSectNum { padding-right: 0.3em; }');
     addNewStyle('#' + divID + ' a { text-decoration: none; color: #0077bb !important; }');
-    addNewStyle('#' + divID + ' .TOCLevel1 { padding-left: 0.2em; border-left:#0077bb solid 0.2em;}');
+    addNewStyle('#' + divID + ' .TOCLevel1 { padding-left: 0.2em;}');
     for (i = 2; i <= 6; i++)
     {
         k = i - 1;
         addNewStyle('#' + divID + ' .TOCLevel' + i + ' { margin-left: ' + k + 'em;}');
     }
     //addNewStyle('#'+divID+' { width: 200px;max-height: 100%;overflow: auto;margin-left: 50%;position: fixed;border: 1px solid #ccc;webkit-border-radius: 6px;moz-border-radius: 6px;border-radius: 12px;padding: 0.8em;');
-    addNewStyle('#' + divID + ' {float:right;margin:0 0 1em 1em;position:fixed;top:50px;right:50px;border: 1px solid #ccc;webkit-border-radius: 6px;moz-border-radius: 6px;border-radius: 12px;padding: 0.8em;}');
+    addNewStyle('#' + divID + ' {font-size:0.8em;line-height:1.3em;float:right;margin:0 0 0.5em 0.5em;position:fixed;top:25px;right:25px;border: 1px solid #ccc;webkit-border-radius: 6px;moz-border-radius: 6px;border-radius: 12px;padding: 0.8em;width:280px;}');
 }

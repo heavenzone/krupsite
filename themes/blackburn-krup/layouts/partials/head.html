@@ -55,20 +55,13 @@
   <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet" type="text/css">
   <!-- krup's css -->
   <link rel="stylesheet" href="/css/blackburn-krup.css">
-  <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
   <link rel="dns-prefetch" href="//cdn.bootcss.com" />
   <!-- RSS -->
   {{ if .RSSLink }}
   <link rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" href="{{ .RSSLink }}" />
   {{ end }}
-
   <!-- highlight -->
-  
+  <link rel="stylesheet" href="{{ $.Site.BaseURL }}css/solarized-light.css">
   {{ partial "favicon.html" . }}
-  {{ range .Site.Params.custom_css }}
-    <link rel="stylesheet" href="{{ $.Site.BaseURL }}{{ . }}">
-  {{ end }}
-  {{ range .Site.Params.custom_js }}
-    <script src="{{ $.Site.BaseURL }}{{ . }}"></script>
-  {{ end }}
+  <script src="{{ .Site.BaseURL }}js/ui.js"></script>
 </head>
