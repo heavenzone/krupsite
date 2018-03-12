@@ -5,7 +5,8 @@
 </div>
 <div id="post-content" class="content">
 
-{{ partial "post_meta.html" . }}
+  <div class="meta-flexbox">{{ partial "post_meta.html" . }}</div>
+
 {{$b := or .Params.simpletoc (or (isset .Params "showchapter") (isset .Params "showtoc"))}}
 {{ if ($b) }}
   {{ partial "simpletoc.html" . }}

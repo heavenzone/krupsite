@@ -9,6 +9,7 @@ tags:
   - R
   - 规划求解
 simpletoc: true
+mathjax: true
 ---
 
 
