@@ -10,7 +10,8 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown", "_files$", "_cache$"]
 hasCJKLanguage = true
 summaryLength = 140
 
-
+[blackfriday]
+  extensionsmask = ["noIntraEmphasis"]
 
 [indexes]
   tag = "tags"

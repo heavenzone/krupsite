@@ -16,7 +16,7 @@ keywords:
 
 # 问题
 
-kableExtra包是`knitr::kable`的一个非常好的扩展。不过用rticles的ctex模板调用了`kableExtra::kable_styling `再生成pdf时发现出现下面这样的错误：
+kableExtra包是`knitr::kable`的一个非常好的扩展。不过用rticles的ctex模板调用了`kableExtra::kable_styling` 再生成pdf时发现出现下面这样的错误：
 
 ```
 kableExtra LaTeX Error: Unknown float option `H'.
