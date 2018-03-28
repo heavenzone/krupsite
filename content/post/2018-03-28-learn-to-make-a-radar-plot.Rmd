@@ -42,7 +42,7 @@ ggradar用的是ggplot2做图。
 ```{r}
 df.new <- df %>% mutate_if(is.numeric, rescale) %>%
   select(姓名, everything())
-#ggradar::ggradar(df.new)
+ggradar::ggradar(df.new)
 ```
 
 # 用fmsb做雷达图
