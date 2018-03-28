@@ -4,7 +4,7 @@ author: Heaven Zone
 date: '2018-01-12'
 slug: another-toc-solution-for-blogdown-fixing-the-pure-chinese-issue
 categories:
-  - Heaven Zone
+  - blogdown
 tags:
   - R
   - blogdown

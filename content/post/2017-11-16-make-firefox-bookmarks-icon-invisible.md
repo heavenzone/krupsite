@@ -9,7 +9,6 @@ tags:
   - firefox
 description: 'How do I hide my FireFox bookmark icons
       in my Bookmarks toolbar?'
-topics: []
 ---
 
 
@@ -21,7 +20,10 @@ topics: []
 
 ## 解决方法
 
-编辑文件： `~/.mozilla/firefox/<*******>.default/chrome/userChrome.css`
+编辑文件(如果没有就创建一个)： 
+
+- linux: `~/.mozilla/firefox/<*******>.default/chrome/userChrome.css`
+- win10: `%APPDATA%\Roaming\Mozilla\Firefox\Profiles\<******>.default`
 
 在适当位置插入下面代码：
 
@@ -35,7 +37,6 @@ topics: []
 toolbarbutton.bookmark-item {
   /*-moz-appearance: button !important;*/
   margin: 0 2px !important;
-  background-color:yellow;
 }
 toolbarbutton.bookmark-item:hover {
   -moz-border-left-colors: #FF6666 !important;
