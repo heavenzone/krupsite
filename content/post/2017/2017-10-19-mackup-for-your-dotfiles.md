@@ -6,9 +6,7 @@ categories: ["Linux"]
 tags: ["mackup", "dotfiles", "linux"]
 ---
 
-```{r setup, include=FALSE}
 
-```
 
 ## 简介
 

@@ -6,10 +6,6 @@ categories: ["rstudio"]
 tags: ["arch", "manjaro", "linux", "rstudio"]
 ---
 
-```{r setup, include=FALSE}
-
-```
-
 ## 官网资料
 
 先看看官网，一共放了两个64位的rstudio的deb包，

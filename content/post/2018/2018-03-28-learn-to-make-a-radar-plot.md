@@ -9,21 +9,15 @@ tags:
   - R
   - 雷达图
   - 可视化
+output: 
+  html_document: 
+    keep_md: yes
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-	echo = TRUE,
-	message = FALSE,
-	warning = FALSE
-)
-options(scipen=200) 
-
-```
 
 # 数据
 
-```{r}
+
+```r
 library(tidyverse)
 library(scales)
 library(showtext)
@@ -35,21 +29,33 @@ df <- data.frame(语文 = c(50, 60, 70, 90),
 df
 ```
 
+```
+##   语文 姓名 数学 英语
+## 1   50    A   55   80
+## 2   60    B   60   60
+## 3   70    C   80   70
+## 4   90    D   90   77
+```
+
 # 用ggradar::ggradar()做雷达图
 
 ggradar用的是ggplot2做图。
 
-```{r}
+
+```r
 df.new <- df %>% mutate_if(is.numeric, rescale) %>%
   select(姓名, everything())
 ggradar::ggradar(df.new)
 ```
 
+![](https://gitee.com/heavenzone/picturebed/raw/master/zhonghaoguang.com/2018/2018-03-28-learn-to-make-a-radar-plot-2-1.png)<!-- -->
+
 # 用fmsb做雷达图
 
 fmsb用的是基础做图。
 
-```{r}
+
+```r
 fmsb_df <- function(df) {
   dfmax <- apply(df, 2, max)
   dfmin <- apply(df, 2, min) 
@@ -60,9 +66,12 @@ fmsb::radarchart(seg = 5, plty = 1:4, plwd = 4, pcol = rainbow(4))
 legend("topright", legend = df$姓名, lty = 1:4, col = rainbow(4))
 ```
 
+![](https://gitee.com/heavenzone/picturebed/raw/master/zhonghaoguang.com/2018/2018-03-28-learn-to-make-a-radar-plot-3-1.png)<!-- -->
+
 # 用ggplot
 
-```{r}
+
+```r
 library(ggplot2)
 library(tidyverse)
 
@@ -149,10 +158,9 @@ hg_df_rescale <- function(df, ...) {
 
 hg_gg_radar(df, "姓名", "C", "D") +
   ggtitle("雷达图")
-
-
-
 ```
+
+![](https://gitee.com/heavenzone/picturebed/raw/master/zhonghaoguang.com/2018/2018-03-28-learn-to-make-a-radar-plot-4-1.png)<!-- -->
 
 
 # 参考资料
