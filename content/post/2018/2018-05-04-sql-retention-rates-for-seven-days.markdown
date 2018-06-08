@@ -341,6 +341,7 @@ con <- dbConnect(RMariaDB::MariaDB(),
                  user = "username", 
                  password = "******")
 
+
 dbSendQuery(con,'SET NAMES gbk')
 
 df.reg <- dbGetQuery(con, "select user, regdate from reg")
@@ -351,7 +352,7 @@ df.log$logdate <- as.Date(df.log$logdate)
 # 求出注册用户的第七天
 df.reg.7 <- df.reg %>% 
   dplyr::filter(regdate>="2018-04-01", regdate<="2018-04-07") %>%
-  transmute(user = user, logdate = regdate + 7) %>% unique()
+  transmute(user = user, logdate = regdate + 7) %>% unique() 
 df.reg.7
 
 # 求出注册后第七天有登录的用户
