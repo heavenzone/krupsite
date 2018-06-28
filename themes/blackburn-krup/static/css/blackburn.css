@@ -132,3 +132,7 @@ table td {
 	border-color: #666666;
 	background-color: #ffffff;
 }
+
+p img {
+  max-width: 90%;
+}
