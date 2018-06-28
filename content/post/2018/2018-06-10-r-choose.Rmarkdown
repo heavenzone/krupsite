@@ -1,0 +1,69 @@
+---
+title: R语言排列组合计算
+author: Heaven Zone
+date: '2018-06-10'
+slug: r-choose
+categories:
+  - R
+tags:
+  - R
+  - 排列组合
+---
+
+R语言的排列组合计算。
+
+# 列出排列数
+
+```{r}
+gtools::permutations(5, 2)
+```
+
+# 列出组合数
+
+```{r}
+gtools::combinations(5, 2)
+
+t(combn(c("a", "b","c"), 2))
+```
+
+# 计算出组合数
+
+```{r}
+choose(5,2)
+```
+
+# 计算出排列数
+
+```{r}
+hg_p <- function(n, r) {
+  choose(n,r)*factorial(r)
+}
+hg_p(5,2)
+```
+
+
+```{r}
+combn(c("a", "b","c"), 2)
+```
+
+
+# 计算阶乘
+
+```{r}
+factorial(5)
+
+1*2*3*4*5
+```
+
+# 求余数
+
+```{r}
+9%%4
+```
+
+# 求整数商
+
+```{r}
+9%/%4
+```
+
