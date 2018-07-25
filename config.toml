@@ -22,7 +22,7 @@ summaryLength = 140
   subtitle = "have fun"
   brand = "HG's BLOG"
   googleAnalytics = "Your Google Analytics tracking ID"
-  disqus = "gitment"
+  disqus = "zhonghaoguang"
   # CSS name for highlight.js
   #highlightjs = "ocean,routeros"
   highlightjsLang = ["r", "yaml", "Bash", "Markdown", "Dockerfile"]
@@ -90,3 +90,4 @@ summaryLength = 140
   github = "heavenzone"
   #stackoverflow = "*"
   #linkedin = "*"
+  
