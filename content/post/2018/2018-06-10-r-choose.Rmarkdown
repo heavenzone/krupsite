@@ -12,6 +12,10 @@ tags:
 
 R语言的排列组合计算。
 
+```{r message=FALSE, warning=FALSE,include=FALSE}
+knitr::opts_chunk$set(class.output="code-output")
+```
+
 # 列出排列数
 
 ```{r}

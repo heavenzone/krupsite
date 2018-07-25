@@ -14,7 +14,7 @@ tags:
 
 现在想把处理好的信息自动发送到手机上，发邮件是最好的选择了，于是找到了一个R的扩展包**mailR**，这个包依赖**rJava**，所以要安装jdk或者jre，下面记录一下代码：
 
-```
+```r
 hg_lib_sendmail = function(file, bodystr) {
   sender <- "发送邮件@163.com"
   recipients <- c("接受邮件@qq.com")

@@ -11,8 +11,6 @@ tags:
 simpletoc: true
 ---
 
-
-
 # 构建测试数据
 
 
@@ -36,7 +34,7 @@ examdf <- data.frame(id = c(1,2,3,4,5,6,7,8,9),
 examdf
 ```
 
-```
+```code-output
 ##   id    name team num score
 ## 1  1  Jordan   SG  23     1
 ## 2  2    Kobe   SG  24     2
@@ -62,7 +60,7 @@ examdf %>% dplyrExtras::s_group_by("team") %>%
   summarise(sum_score = sum(score))
 ```
 
-```
+```code-output
 ## # A tibble: 4 x 2
 ##   team  sum_score
 ##   <chr>     <dbl>
@@ -79,7 +77,7 @@ examdf %>% dplyrExtras::s_group_by("team") %>%
 aggregate(score ~ team, examdf, sum)
 ```
 
-```
+```code-output
 ##   team score
 ## 1   PF     9
 ## 2   PG    15
@@ -94,7 +92,7 @@ aggregate(score ~ team, examdf, sum)
 setDT(examdf)[, .(sum_score = sum(score)), by = team]
 ```
 
-```
+```code-output
 ##    team sum_score
 ## 1:   SG         9
 ## 2:   SF        12
@@ -113,7 +111,7 @@ examdf %>% dplyr::filter(team == "SG" | team == "PG") %>%
   summarise(sum_score = sum(score))
 ```
 
-```
+```code-output
 ## # A tibble: 2 x 2
 ##   team  sum_score
 ##   <chr>     <dbl>
@@ -128,7 +126,7 @@ examdf %>% dplyr::filter(team == "SG" | team == "PG") %>%
 aggregate(score ~ team, examdf[examdf$team %in% c("SG", "PG"), ], sum)
 ```
 
-```
+```code-output
 ##   team score
 ## 1   PG    15
 ## 2   SG     9
@@ -141,7 +139,7 @@ aggregate(score ~ team, examdf[examdf$team %in% c("SG", "PG"), ], sum)
 setDT(examdf)[team %in% c("SG", "PG"), .(sum_score = sum(score)), by = team]
 ```
 
-```
+```code-output
 ##    team sum_score
 ## 1:   SG         9
 ## 2:   PG        15
@@ -151,7 +149,7 @@ setDT(examdf)[team %in% c("SG", "PG"), .(sum_score = sum(score)), by = team]
 setDT(examdf, key = "team")[c("SG", "PG"), .(sum_score = sum(score)), by = team]
 ```
 
-```
+```code-output
 ##    team sum_score
 ## 1:   SG         9
 ## 2:   PG        15
@@ -167,7 +165,7 @@ examdf %>% select(name, num) %>%
   arrange(num)
 ```
 
-```
+```code-output
 ##      name num
 ## 1   T-Mac   1
 ## 2   Dwade   3
@@ -187,7 +185,7 @@ examdf %>% select(name, num) %>%
 examdf[order(examdf$num), c("name", "num")]
 ```
 
-```
+```code-output
 ##       name num
 ## 1:   T-Mac   1
 ## 2:   Dwade   3
@@ -208,7 +206,7 @@ examdf[order(examdf$num), c("name", "num")]
 setDT(examdf)[order(num), .(name, num)]
 ```
 
-```
+```code-output
 ##       name num
 ## 1:   T-Mac   1
 ## 2:   Dwade   3
@@ -232,7 +230,7 @@ examdf %>% group_by(team) %>%
   dplyr::filter(score == max(score))
 ```
 
-```
+```code-output
 ## # A tibble: 4 x 5
 ## # Groups:   team [4]
 ##      id name    team    num score
@@ -250,7 +248,7 @@ examdf %>% group_by(team) %>%
 setDT(examdf)[, .SD[ score == max(score)], by = team]
 ```
 
-```
+```code-output
 ##    team id    name num score
 ## 1:   PF  5  Garnet  21     5
 ## 2:   PG  8     CP3   3     8
@@ -268,7 +266,7 @@ examdf.reb <- data.table(name = c("Duncan", "Garnet"),
 examdf.reb
 ```
 
-```
+```code-output
 ##      name reb
 ## 1: Duncan  12
 ## 2: Garnet  13
@@ -282,7 +280,7 @@ examdf.reb
 left_join(examdf, examdf.reb, by = "name", )
 ```
 
-```
+```code-output
 ##   id    name team num score reb
 ## 1  4  Duncan   PF  21     4  12
 ## 2  5  Garnet   PF  21     5  13
@@ -305,7 +303,7 @@ setkey(examdf.reb, name)
 examdf[examdf.reb]
 ```
 
-```
+```code-output
 ##    id   name team num score reb
 ## 1:  4 Duncan   PF  21     4  12
 ## 2:  5 Garnet   PF  21     5  13
@@ -316,7 +314,7 @@ examdf[examdf.reb]
 examdf.reb[examdf]
 ```
 
-```
+```code-output
 ##       name reb id team num score
 ## 1:    Bird  NA  9   SF  33     9
 ## 2:     CP3  NA  8   PG   3     8
@@ -334,7 +332,7 @@ examdf.reb[examdf]
 merge(examdf, examdf.reb, all = TRUE)
 ```
 
-```
+```code-output
 ##       name id team num score reb
 ## 1:    Bird  9   SF  33     9  NA
 ## 2:     CP3  8   PG   3     8  NA
@@ -356,7 +354,7 @@ merge(examdf, examdf.reb, all = TRUE)
 class(examdf)
 ```
 
-```
+```code-output
 ## [1] "data.table" "data.frame"
 ```
 
@@ -365,7 +363,7 @@ setDT(examdf)
 examdf[num == 3]
 ```
 
-```
+```code-output
 ##    id    name team num score
 ## 1:  8     CP3   PG   3     8
 ## 2:  7   Dwade   PG   3     7
@@ -376,7 +374,7 @@ examdf[num == 3]
 examdf[num == 3, ]
 ```
 
-```
+```code-output
 ##    id    name team num score
 ## 1:  8     CP3   PG   3     8
 ## 2:  7   Dwade   PG   3     7
@@ -387,7 +385,7 @@ examdf[num == 3, ]
 examdf[, num == 3]
 ```
 
-```
+```code-output
 ## [1] FALSE  TRUE FALSE  TRUE FALSE  TRUE FALSE FALSE FALSE
 ```
 
@@ -407,7 +405,7 @@ examdf[, num == 3]
 examdf[, .SD[score == max(score)], by = team]
 ```
 
-```
+```code-output
 ##    team id    name num score
 ## 1:   SF  9    Bird  33     9
 ## 2:   PG  8     CP3   3     8
@@ -420,7 +418,7 @@ examdf[, .SD[score == max(score)], by = team]
 examdf[, .SD[, score == max(score)], by = team]
 ```
 
-```
+```code-output
 ##    team    V1
 ## 1:   SF  TRUE
 ## 2:   SF FALSE
@@ -438,7 +436,7 @@ examdf[, .SD[, score == max(score)], by = team]
 examdf[, .SD, .SDcols = team:score]
 ```
 
-```
+```code-output
 ##    team num score
 ## 1:   SF  33     9
 ## 2:   PG   3     8
@@ -455,7 +453,7 @@ examdf[, .SD, .SDcols = team:score]
 examdf[, .SD, .SDcols = 3:4]
 ```
 
-```
+```code-output
 ##    team num
 ## 1:   SF  33
 ## 2:   PG   3
@@ -473,7 +471,7 @@ examdf[, .SD, .SDcols = 3:4]
 examdf[, .SD[1]]
 ```
 
-```
+```code-output
 ##    id name team num score
 ## 1:  9 Bird   SF  33     9
 ```
@@ -483,7 +481,7 @@ examdf[, .SD[1]]
 examdf[, .SD[1], by = team]
 ```
 
-```
+```code-output
 ##    team id    name num score
 ## 1:   SF  9    Bird  33     9
 ## 2:   PG  8     CP3   3     8
@@ -502,7 +500,7 @@ examdf[, {
 } , by = team]
 ```
 
-```
+```code-output
 ##    team        V1
 ## 1:   SF 0.7500000
 ## 2:   SF 0.2500000
@@ -519,7 +517,7 @@ examdf[, {
 examdf[, .(pct = score/ sum(score)), by = team]
 ```
 
-```
+```code-output
 ##    team       pct
 ## 1:   SF 0.7500000
 ## 2:   SF 0.2500000
@@ -537,7 +535,7 @@ examdf[, pct := score/ sum(score), by = team]
 examdf
 ```
 
-```
+```code-output
 ##    id    name team num score       pct
 ## 1:  9    Bird   SF  33     9 0.7500000
 ## 2:  8     CP3   PG   3     8 0.5333333
@@ -567,7 +565,7 @@ examdf
 examdf[.N]
 ```
 
-```
+```code-output
 ##    id  name team num score  pct
 ## 1:  3 T-Mac   SF   1     3 0.25
 ```
@@ -577,7 +575,7 @@ examdf[.N]
 examdf[, .N]
 ```
 
-```
+```code-output
 ## [1] 9
 ```
 
@@ -586,7 +584,7 @@ examdf[, .N]
 examdf[, .N, by = team]
 ```
 
-```
+```code-output
 ##    team N
 ## 1:   SF 2
 ## 2:   PG 2
@@ -599,7 +597,7 @@ examdf[, .N, by = team]
 examdf[,-c(2)][, c(.N, lapply(.SD, sum)), by = team]
 ```
 
-```
+```code-output
 ##    team N id num score pct
 ## 1:   SF 2 12  34    12   1
 ## 2:   PG 2 15   6    15   1
@@ -616,7 +614,7 @@ examdf[, i := .I]
 examdf
 ```
 
-```
+```code-output
 ##    id    name team num score       pct i
 ## 1:  9    Bird   SF  33     9 0.7500000 1
 ## 2:  8     CP3   PG   3     8 0.5333333 2
@@ -634,7 +632,7 @@ examdf
 examdf[, .I[which.max(score)], by = team]
 ```
 
-```
+```code-output
 ##    team V1
 ## 1:   SF  1
 ## 2:   PG  2
@@ -647,7 +645,7 @@ examdf[, .I[which.max(score)], by = team]
 examdf[, .I[1:3], by = team]
 ```
 
-```
+```code-output
 ##     team V1
 ##  1:   SF  1
 ##  2:   SF  9
@@ -672,7 +670,7 @@ examdf[, gcount := .GRP, by = team]
 examdf[]
 ```
 
-```
+```code-output
 ##    id    name team num score       pct i gcount
 ## 1:  9    Bird   SF  33     9 0.7500000 1      1
 ## 2:  8     CP3   PG   3     8 0.5333333 2      2
@@ -694,7 +692,7 @@ DT2 = data.table(grp=rep(c("A", "B", "C", "A", "B"), c(2,2,3,1,2)), value=1:10)
 DT2
 ```
 
-```
+```code-output
 ##     grp value
 ##  1:   A     1
 ##  2:   A     2
@@ -712,7 +710,7 @@ DT2
 cbind(rleid(DT2$grp), DT2)
 ```
 
-```
+```code-output
 ##     V1 grp value
 ##  1:  1   A     1
 ##  2:  1   A     2
