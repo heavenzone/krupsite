@@ -21,7 +21,7 @@ In addition: There were 14 warnings (use warnings() to see them)
 
 貌似网上都是用chrome，于是尝试一下，切换窗口没有问题。
 
-```{r ,warning=FALSE, message=FALSE}
+```r
 system("java -jar C:/krupSoftware/bin/selenium-server-standalone-3.13.0.jar",wait = FALSE, invisible = FALSE)
 
 require(RSelenium)
@@ -47,3 +47,4 @@ remDr$getCurrentWindowHandle()
 wins = remDr$getWindowHandles()
 wins
 ```
+
