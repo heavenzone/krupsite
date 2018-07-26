@@ -11,6 +11,10 @@ tags:
 
 用R语言写了个函数对矩阵单位正交化。
 
+```{r message=FALSE, warning=FALSE,include=FALSE}
+knitr::opts_chunk$set(class.output="code-output")
+```
+
 ```{r}
 zj <- function(m) {
   a <- m
