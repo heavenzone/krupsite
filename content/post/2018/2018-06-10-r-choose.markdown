@@ -45,6 +45,7 @@ gtools::permutations(5, 2)
 ## [20,]    5    4
 ```
 
+
 # 列出组合数
 
 

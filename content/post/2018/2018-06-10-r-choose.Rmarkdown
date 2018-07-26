@@ -22,6 +22,7 @@ knitr::opts_chunk$set(class.output="code-output")
 gtools::permutations(5, 2)
 ```
 
+
 # 列出组合数
 
 ```{r}
