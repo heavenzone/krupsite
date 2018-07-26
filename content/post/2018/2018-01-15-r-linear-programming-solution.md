@@ -51,7 +51,6 @@ install.packages("Rglpk")
 
 一个工厂有车床、刨床、钻床和铣床四种设备。生产A、B、C、D、E五中产品。每种设备每天生产时间为8小时，每年工作日为250天。各种设备台数，全年能力（可用工时），每种设备生产一件分别占用这四种设备的工时（单位：小时），五种产品可以获得的利润（单位：元/件），如下表所示：
 
-
 : 生产计划问题的数据
 
 |	设备类型	|	产品A	|	产品B	|	产品C	|	产品D	|	产品E	|	设备能力	|
@@ -63,11 +62,11 @@ install.packages("Rglpk")
 |	利润	|	123	|	94	|	105	|	132	|	118	|		|
 
 
-现在我们要确定这五种产品的生产数量，使得占用的设备工时不超过各种设备的能力，同时使利润最大。
+现在我们要确定这五种产品的生产数量，$\rho$使得占用的设备工时不超过各种设备的能力，同时使利润最大。
 
 ### 数学模型
 
-$$
+`$$
 max(z) = 123x_1+94x_2+105x_3+132x_4+118x_5 \\
 \left\{\begin{array}{rl}
 \quad 0.23x_1+0.44x_2+0.17x_3+0.08x_4+0.36x_5 \leq 24000 \\
@@ -76,7 +75,7 @@ max(z) = 123x_1+94x_2+105x_3+132x_4+118x_5 \\
 \quad 0.55x_1+0.72x_2 \qquad\qquad +0.61x_4 \qquad\qquad \leq 12000 \\
 \quad x_1,x_2,x_3,x_4,x_5 \geq0 ，且为正整数\\
 \end{array} \right. \\
-$$
+$$`
 
 
 ### 代码实现
@@ -94,7 +93,7 @@ mat <- as.matrix(rbind(row1,row2,row3,row4))
 mat
 ```
 
-```
+```code-output
 ##      [,1] [,2] [,3] [,4] [,5]
 ## row1 0.23 0.44 0.17 0.08 0.36
 ## row2 0.13 0.00 0.20 0.37 0.19
@@ -111,7 +110,7 @@ rst <- Rglpk_solve_LP(obj, mat, dir, rhs, max = max, types = "I")
 rst
 ```
 
-```
+```code-output
 ## $optimum
 ## [1] 10872517
 ## 
@@ -134,7 +133,7 @@ rst
 
 得到结果是：
 
-$$
+`$$
 \left\{\begin{array}{lr}
 x_1 = 0 \\
 x_2 = 0 \\
@@ -142,7 +141,7 @@ x_3 = 18771 \\
 x_4 = 19672 \\
 x_5 = 53431 \\
 \end{array} \right. \\
-$$
+$$`
 
 利润最大值为：10872517。
 
@@ -157,7 +156,7 @@ $$
 
 #### 安装
 
-```
+```r
 install.package("Rsymphony")
 ```
 
@@ -242,7 +241,7 @@ max <- F
 Rsymphony_solve_LP(obj, mat, dir, rhs, max = F)
 ```
 
-```
+```code-output
 ## $solution
 ## [1] 375 125 375 125
 ## 
@@ -259,7 +258,7 @@ Rsymphony_solve_LP(obj, mat, dir, rhs, max = F)
 Rglpk_solve_LP(obj, mat, dir, rhs, max = F)
 ```
 
-```
+```code-output
 ## $optimum
 ## [1] 2287500
 ## 
@@ -293,7 +292,7 @@ Rglpk_solve_LP(obj, mat, dir, rhs, max = F)
 一艘货船最大装载重量为5000千克，现有A, B, C, D, E, F六种货物待装运，每种货物单件的价值和重量如下表：
 
 |	物货名称	|	A	|	B	|	C	|	D	|	E	|	F	|
-|	:-:	|	-:	|	-:	|	-:	|	-:	|	-:	|	-:	|
+|	:-:	|	--:	|	--:	|	--:	|	--:	|	--:	|	--:	|
 |	重量（公斤/件）	|	320	|	420	|	530	|	550	|	590	|	640	|
 |	价值（万元/件）	|	2.75	|	3.22	|	4.55	|	4.73 	|	5.01	|	5.5	|
 
@@ -322,7 +321,7 @@ types <- c("I")
 Rsymphony_solve_LP(obj, mat, dir, rhs, max = max, types = types)
 ```
 
-```
+```code-output
 ## $solution
 ## [1] 2 0 2 6 0 0
 ## 
@@ -340,17 +339,18 @@ Rsymphony_solve_LP(obj, mat, dir, rhs, max = max, types = types)
 
 : 物流配送问题的数据
 
-|	运价（元/吨）	|	B1	|	B2	|	B3	|	
-|	:-:	|	-:	|	-:	|	-:	|	
-|	A1	|	12	|	13	|	21	|	
+|	运价（元/吨）	|	B1	|	B2	|	B3	|
+|	:-:	|	--:	|	--:	|	--:	|
+|	A1	|	12	|	13	|	21	|
 |	A2	|	14	|	17	|	8	|
 
-**求**总运费最低的配送方案。
+
+求总运费最低的配送方案。
 
 : 变量设置
 
 |	运量	|	B1	|	B2	|	B3	| 生产量（吨） |
-|	:-:	|	:-:	|	:-:	|	:-:	| -: |
+|	:-:	|	:-:	|	:-:	|	:-:	| --: |
 |	A1	|	x11	|	x12	|	x13	| 520 |
 |	A2	|	x21	|	x22	|	x23	| 480 |
 |	需求量（吨）	|	200	|	400	|	400	|	1000	|
@@ -393,7 +393,7 @@ types <- c("I")
 Rsymphony_solve_LP(obj, mat, dir, rhs, max = max, types = types)
 ```
 
-```
+```code-output
 ## $solution
 ## [1] 120   0 400  80 400   0
 ## 
@@ -414,7 +414,7 @@ Rsymphony_solve_LP(obj, mat, dir, rhs, max = max, types = types)
 : 公司选择问题的数据
 
 |	子公司	|	A	|	B	|	C	|	D	|	E	|
-|	:-:	|	-:	|	-:	|	-:	|	-:	|	-:	|
+|	:-:	|	--:	|	--:	|	--:	|	--:	|	--:	|
 |	资产（亿元）	|	3.48	|	5.62	|	7.33	|	6.27	|	2.14	|
 |	负债（亿元）	|	1.28	|	2.53	|	1.02	|	3.55	|	0.53	|
 |	税后利润（万元）	|	5400	|	2300	|	4600	|	3300	|	980	|
@@ -469,7 +469,7 @@ types <- c("I")
 Rsymphony_solve_LP(obj, mat, dir, rhs, max = max, types = types)
 ```
 
-```
+```code-output
 ## $solution
 ## [1] 1 1 1 0 0
 ## 
@@ -583,7 +583,7 @@ mat <- mat.tmp
 mat
 ```
 
-```
+```code-output
 ##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13]
 ## [1,]    1    1    1    1    0    0    0    0    0     0     0     0     0
 ## [2,]    0    0    0    0    1    1    1    1    0     0     0     0     0
@@ -613,7 +613,7 @@ rst <- Rsymphony_solve_LP(obj, mat, dir, rhs, max = max)
 matrix(rst$solution, ncol = 4)
 ```
 
-```
+```code-output
 ##      [,1] [,2] [,3] [,4]
 ## [1,]    0    0    1    0
 ## [2,]    0    0    0    1
@@ -625,7 +625,7 @@ matrix(rst$solution, ncol = 4)
 rst
 ```
 
-```
+```code-output
 ## $solution
 ##  [1] 0 0 1 0 0 0 0 1 1 0 0 0 0 1 0 0
 ## 

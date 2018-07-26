@@ -12,16 +12,15 @@ description: R语言如何取消加载扩展包
 simpletoc: true
 ---
 
+
+
 # 加载扩展包
+
 
 
 ```r
 library(ggplot2)
 require(blogdown, quietly = TRUE)
-```
-
-```
-## Warning: package 'blogdown' was built under R version 3.4.4
 ```
 
 

@@ -12,9 +12,10 @@ tags:
 
 最近升级了Manjaro，关机后都没用Manjaro，而一直在用win10，后来想进入manjaro，发现进入不了，修复后，发现grub2启动项不见了win10的启动项，于是要把它修复修复，在百度上搜索了一下关键字`grub2 win10`，貌似没有什么是真正有用的，有些描述也不够详细，最后还是用bing搜索了一下英文网页，还是解决了。
 
+
 主要用到了下面命令：
 
-```
+```shell
 sudo os-prober
 sudo update-grub
 ```

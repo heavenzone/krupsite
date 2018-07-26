@@ -12,7 +12,12 @@ description: R语言如何取消加载扩展包
 simpletoc: true
 ---
 
+```{r message=FALSE, warning=FALSE,include=FALSE}
+knitr::opts_chunk$set(class.output="code-output")
+```
+
 # 加载扩展包
+
 
 ```{r}
 library(ggplot2)

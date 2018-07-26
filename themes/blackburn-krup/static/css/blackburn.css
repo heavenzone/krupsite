@@ -90,6 +90,7 @@ pre code {
 
 pre .code-output {background: #f8f8f8;}
 pre .language-code-output {background: #f8f8f8;}
+pre .language-.code-output{background: #f8f8f8;}
 
 blockquote {
     margin: 2em;
