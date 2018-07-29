@@ -18,26 +18,3 @@
 <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 <a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 {{ end }}
-
-<!--
-将评论系统修改为gitment: https://github.com/imsun/gitment
--->
-
-<!--
-{{ if(0)}}
-<div id="commment-container"></div>
-<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
-<script>
-var gitment = new Gitment({
-  id: "{{ .Slug }}", 
-  owner: "{{ .Site.Params.gitment_owner }}",
-  repo: "{{ .Site.Params.gitment_repo }}",
-  oauth: {
-    client_id: "{{ .Site.Params.gitment_client_id }}",
-    client_secret: "{{ .Site.Params.gitment_client_secret }}",
-  },
-})
-gitment.render('commment-container')
-</script>
-{{end}}
--->

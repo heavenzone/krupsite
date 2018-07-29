@@ -8,7 +8,7 @@ canonifyurls = true
 paginate = 20
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown", "_files$", "_cache$"]
 hasCJKLanguage = true
-summaryLength = 140
+summaryLength = 200
 
 [blackfriday]
   extensionsmask = ["noIntraEmphasis"]
@@ -30,13 +30,7 @@ summaryLength = 140
   dateFormat = "2006-01-02"
   description = "ZhongHaoGuang's Blog, 钟浩光的个人博客"
   keywords = "钟浩光, R语言"
-  # for gitment
-  gitment_id = "location.href"
-  gitment_owner = "heavenzone"
-  gitment_repo = "krupsite"
-  gitment_client_id = "d056ce29de7f2573b45e"
-  gitment_client_secret = "c553a020b1c67375df8ecc1588675f6e83f43753"
-  
+ 
 [menu]
   # Shown in the side menu.
   [[menu.main]]
