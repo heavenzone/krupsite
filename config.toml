@@ -25,7 +25,7 @@ summaryLength = 200
   disqus = "zhonghaoguang"
   # CSS name for highlight.js
   #highlightjs = "ocean,routeros"
-  highlightjsLang = ["r", "yaml", "Bash", "Markdown", "Dockerfile"]
+  highlightjsLang = ["r", "yaml", "bash", "md", "Dockerfile"]
   highlightjs = "zenburn"
   dateFormat = "2006-01-02"
   description = "ZhongHaoGuang's Blog, 钟浩光的个人博客"

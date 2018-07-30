@@ -1,6 +1,14 @@
 {{ with .Site.Params.googleAnalytics }}
 
-<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1271254640'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s13.cnzz.com/stat.php%3Fid%3D1271254640%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+<script type="text/javascript">
+(function() {
+    // Don't ever inject Disqus on localhost--it creates unwanted
+    // discussions from 'localhost:1313' on your Disqus account...
+    if (window.location.hostname == "localhost")
+        return;
+  var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1271254640'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s13.cnzz.com/stat.php%3Fid%3D1271254640%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));
+})();
+</script>
 
 <!--
 <script>
