@@ -36,7 +36,7 @@ paginate = 800
     url = "/index.xml"
 
 [params]
-    description = "A Hugo theme ported from the static site generator Ivy."
+    description = "Have Fun"
     footer = "&copy; [Heaven Zone](https://zhonghaoguang.com) 2017 | [Github](https://github.com/heavenzone) "
 
   highlightjsVersion = "9.12.0"
