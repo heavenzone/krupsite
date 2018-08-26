@@ -37,7 +37,7 @@ paginate = 800
 
 [params]
     description = "Have Fun"
-    footer = "&copy; [Heaven Zone](https://zhonghaoguang.com) 2017 | [Github](https://github.com/heavenzone) "
+    footer = "&copy; [Heaven Zone](https://zhonghaoguang.com) 2018 | [Github](https://github.com/heavenzone) "
 
   highlightjsVersion = "9.12.0"
   highlightjsCDN = "//cdn.bootcss.com"
