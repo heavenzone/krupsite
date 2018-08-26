@@ -1,4 +1,5 @@
 /* font */
+html{ font-size: 16px;}
 body {font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
 code, pre code {font-family: Menlo,Monaco,Consolas,"Courier New",monospace;}
 .doc-main {font-size: 18px;line-height: 1.5;}
