@@ -12,8 +12,13 @@ tags:
 simpletoc: true  
 ---
 
+## 简介
 
-# python pandas DataFrame 笔记
+习惯了r的data.frame，再学习python的pandas的DataFrame，有各种的不习惯。索引为什么从0开始？当然我也学过c语言，也知道很多其他语言也是从0开始，但是为什么不弄成从1开始呢？我不相信从0调到1开始，性能影响有多大。更难以理解的是类似`nbadf.iloc[:, 0:3]`这样的索引，竟然不包含3这一列，我也大概能理解应该是类似这样的语句来的`for(i=0; i<3; i++)`，如果真的是这么来的难道就不可以加多个等号吗？非要转一个弯？
+
+做个笔记，以便查阅...
+
+## python pandas DataFrame 笔记
 
 
 ```python
