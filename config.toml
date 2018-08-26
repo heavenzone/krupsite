@@ -9,7 +9,7 @@ ignoreFiles = ["\\.Rmd$", "_files$", "_cache$"]
 preserveTaxonomyNames = true
 footnotereturnlinkcontents = "↩"
 canonifyurls = true
-paginate = 10
+paginate = 800
 
 [permalinks]
     post = "/post/:year/:month/:day/:slug/"
