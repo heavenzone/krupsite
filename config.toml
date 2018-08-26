@@ -1,87 +1,45 @@
 baseurl = "/"
-languageCode = "en-us"
-title = "HaoGuang's Blog"
-theme = "blackburn-krup"
-author = "HaoGuang"
-copyright = "&copy; 2017. All rights reserved."
+languageCode = "zh-cn"
+title = "HG's BLOG"
+author = "Heaven Zone"
+theme = "hgivy"
+googleAnalytics = ""
+disqusShortname = ""
+ignoreFiles = ["\\.Rmd$", "_files$", "_cache$"]
+preserveTaxonomyNames = true
+footnotereturnlinkcontents = "↩"
 canonifyurls = true
-paginate = 20
-ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown", "_files$", "_cache$"]
-hasCJKLanguage = true
-summaryLength = 200
+paginate = 10
 
-[blackfriday]
-  extensionsmask = ["noIntraEmphasis"]
+[permalinks]
+    post = "/post/:year/:month/:day/:slug/"
+    note = "/note/:year/:month/:day/:slug/"
 
-[indexes]
-  tag = "tags"
-  category = "categories"
+[[menu.main]]
+    name = "主页"
+    url = "/"
+    weight = 1
+[[menu.main]]
+    name = "我"
+    url = "/about/"
+    weight = 2
+[[menu.main]]
+    name = "分类"
+    url = "/categories/"
+    weight = 3
+[[menu.main]]
+    name = "标签"
+    url = "/tags/"
+    weight = 4
+[[menu.main]]
+    name = "订阅"
+    url = "/index.xml"
 
 [params]
-  # Shown in the home page
-  subtitle = "have fun"
-  brand = "HG's BLOG"
-  googleAnalytics = "Your Google Analytics tracking ID"
-  disqus = "zhonghaoguang"
-  # CSS name for highlight.js
-  #highlightjs = "ocean,routeros"
-  highlightjsLang = ["r", "yaml", "bash", "md", "Dockerfile"]
-  highlightjs = "zenburn"
-  dateFormat = "2006-01-02"
-  description = "ZhongHaoGuang's Blog, 钟浩光的个人博客"
-  keywords = "钟浩光, R语言"
- 
-[menu]
-  # Shown in the side menu.
-  [[menu.main]]
-    name = "主页"
-    pre = "<i class='fa fa-home fa-fw'></i>"
-    weight = 1
-    identifier = "home"
-    url = "/"
-  [[menu.main]]
-    name = "文章列表"
-    pre = "<i class='fa fa-list fa-fw'></i>"
-    weight = 2
-    identifier = "post"
-    url = "/post/"
-  [[menu.main]]
-    name = "关于我"
-    pre = "<i class='fa fa-user fa-fw'></i>"
-    weight = 3
-    identifier = "about"
-    url = "/about/"
-  #[[menu.main]]
-  #  name = "主题"
-  #  pre = "<i class='fa fa-folder fa-fw'></i>"
-  #  weight = 4
-  #  identifier = "topic"
-  #  url = "/topics/"
-  [[menu.main]]
-    name = "标签"
-    pre = "<i class='fa fa-tags fa-fw'></i>"
-    weight = 6
-    identifier = "tag"
-    url = "/tags/"
-  [[menu.main]]
-    name = "分类"
-    pre = "<i class='fa fa-list fa-fw'></i>"
-    weight = 5
-    identifier = "category"
-    url = "/categories/"
-  #[[menu.main]]
-  #  name = "Contact"
-  #  pre = "<i class='fa fa-phone fa-fw'></i>"
-  #  weight = 7
-  #  url = "/contact/"
+    description = "A Hugo theme ported from the static site generator Ivy."
+    footer = "&copy; [Heaven Zone](https://zhonghaoguang.com) 2017 | [Github](https://github.com/heavenzone) "
 
-[social]
-  # Link your social networking accouns to the side menu
-  # by entering your username or ID.
-  #twitter = "*"
-  #facebook = "*"
-  #instagram = "*"
-  github = "heavenzone"
-  #stackoverflow = "*"
-  #linkedin = "*"
-  
+  highlightjsVersion = "9.12.0"
+  highlightjsCDN = "//cdn.bootcss.com"
+  highlightjsLang = ["r", "python", "css"]
+  highlightjsTheme = "github"
