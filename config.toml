@@ -11,6 +11,10 @@ footnotereturnlinkcontents = "↩"
 canonifyurls = true
 paginate = 800
 
+[blackfriday]
+    extensionsmask = ["noIntraEmphasis"]
+    fractions= false
+
 [permalinks]
     post = "/post/:year/:month/:day/:slug/"
     note = "/note/:year/:month/:day/:slug/"

@@ -16,14 +16,14 @@ R语言的排列组合计算。
 knitr::opts_chunk$set(class.output="code-output")
 ```
 
-# 列出排列数
+## 列出排列数
 
 ```{r}
 gtools::permutations(5, 2)
 ```
 
 
-# 列出组合数
+## 列出组合数
 
 ```{r}
 gtools::combinations(5, 2)
@@ -31,13 +31,13 @@ gtools::combinations(5, 2)
 t(combn(c("a", "b","c"), 2))
 ```
 
-# 计算出组合数
+## 计算出组合数
 
 ```{r}
 choose(5,2)
 ```
 
-# 计算出排列数
+## 计算出排列数
 
 ```{r}
 hg_p <- function(n, r) {
@@ -52,7 +52,7 @@ combn(c("a", "b","c"), 2)
 ```
 
 
-# 计算阶乘
+## 计算阶乘
 
 ```{r}
 factorial(5)
@@ -60,13 +60,13 @@ factorial(5)
 1*2*3*4*5
 ```
 
-# 求余数
+## 求余数
 
 ```{r}
 9%%4
 ```
 
-# 求整数商
+## 求整数商
 
 ```{r}
 9%/%4

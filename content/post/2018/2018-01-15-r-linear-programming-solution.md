@@ -66,7 +66,7 @@ install.packages("Rglpk")
 
 ### 数学模型
 
-`$$
+<div>$$
 max(z) = 123x_1+94x_2+105x_3+132x_4+118x_5 \\
 \left\{\begin{array}{rl}
 \quad 0.23x_1+0.44x_2+0.17x_3+0.08x_4+0.36x_5 \leq 24000 \\
@@ -75,7 +75,7 @@ max(z) = 123x_1+94x_2+105x_3+132x_4+118x_5 \\
 \quad 0.55x_1+0.72x_2 \qquad\qquad +0.61x_4 \qquad\qquad \leq 12000 \\
 \quad x_1,x_2,x_3,x_4,x_5 \geq0 ，且为正整数\\
 \end{array} \right. \\
-$$`
+$$</div>
 
 
 ### 代码实现
@@ -133,7 +133,8 @@ rst
 
 得到结果是：
 
-`$$
+<div>
+$$
 \left\{\begin{array}{lr}
 x_1 = 0 \\
 x_2 = 0 \\
@@ -141,7 +142,7 @@ x_3 = 18771 \\
 x_4 = 19672 \\
 x_5 = 53431 \\
 \end{array} \right. \\
-$$`
+$$</div>
 
 利润最大值为：10872517。
 
@@ -206,7 +207,7 @@ Rsymphony_solve_LP(obj, mat, dir, rhs, bounds = NULL,
 
 ### 数学模型
 
-$$
+<div>$$
 min(z) = 2200x_1 + 1800x_2 + 2400x_3 + 2700x_4 \\
 \left\{\begin{array}{lr}
 0.30x_1 + 0.15x_2 + 0.00x_3 + 0.15x_4 \geq 150 \\
@@ -215,7 +216,7 @@ min(z) = 2200x_1 + 1800x_2 + 2400x_3 + 2700x_4 \\
 x_1 + x_2 + x_3 + x_4 = 1000 \\
 x_1,x_2,x_3,x_4 \geq 0 \\
 \end{array} \right. \\
-$$
+$$</div>
 
 
 书中$min(z)$那条公式的系数有误。
@@ -298,12 +299,13 @@ Rglpk_solve_LP(obj, mat, dir, rhs, max = F)
 
 ### 数学模型
 
-$$
+<div>$$
 max(z) = 2.75x_1 + 3.22x_2 + 4.55x_3 + 4.73x_4 + 5.01x_5 + 5.5x_6 \\
 \left\{\begin{array}{lr}
 320x_1 + 420x_2 + 530x_3 + 550x_4 + 590x_5 + 640x_6 \leq 5000\\
 \end{array} \right. \\
-$$
+$$</div>
+
 ### 代码实现
 
 
@@ -361,7 +363,7 @@ Rsymphony_solve_LP(obj, mat, dir, rhs, max = max, types = types)
 
 ### 数学模型
 
-$$
+<div>$$
 min(z) = 12x_{11} + 13x_{12} + 21x_{13} + 14x_{21} + 17x_{22} + 8x_{23} \\
 \left\{\begin{array}{rl}
 x_{11} + x_{12} + x_{13} = 520 \\
@@ -370,7 +372,7 @@ x_{11} + x_{21} = 200 \\
 x_{12} + x_{22} = 400 \\
 x_{13} + x_{23} = 400 \\
 \end{array} \right. \\
-$$
+$$</div>
 
 ### 代码实现
 
@@ -423,16 +425,17 @@ Rsymphony_solve_LP(obj, mat, dir, rhs, max = max, types = types)
 
 设有5个c(0, 1)的变量，x1,x2,x3,x4,x5，取值如下：
 
-$$
+
+<div>$$
 x_i=\left\{\begin{array}{rl}
 0 & 不选择的子公司 \\
 1 & 选择的子公司 \\
 \end{array} \right. \\
-$$
+$$</div>
 
 ### 数学模型
 
-$$
+<div>$$
 min(z) = 5400x_{1} + 2300x_{2} + 4600x_{3} + 3300x_{4} + 980x_{5} \\
 \left\{\begin{array}{rl}
 & 3.48x_1 + 5.62x_2 + 7.33x_3 + 6.27x_4 + 2.14x_5  \geq 10 \\
@@ -440,7 +443,7 @@ min(z) = 5400x_{1} + 2300x_{2} + 4600x_{3} + 3300x_{4} + 980x_{5} \\
 & x_1 + x_2 + x_3 + x_4 + x_5 = 3 \\
 & x_1, x_2, x_3, x_4, x_5 为 0或1
 \end{array} \right. \\
-$$
+$$</div>
 
 ### 代码实现
 
@@ -490,20 +493,20 @@ Rsymphony_solve_LP(obj, mat, dir, rhs, max = max, types = types)
 
 指派问题：有n项任务由n个人完成，每项任务交给一个人，每人都有一项任务。由i个人完成j项任务的成本（或效益）为$c_{ij}$。求使总成本最小（或总效益最大）的分配方案。
 
-$$
+<div>$$
 x_{ij}\left\{\begin{array}{rl}
 0 & 第i个人不是从事第j项任务 \\
 1 & 第i个人被指派完成第j项任务 \\
 \end{array} \right. \\
-$$
+$$</div>
 
 这也是一个c(0, 1)规划问题，这个问题的0-1线性规划模型如下：
 
-$$
+<div>$$
 max(z)=\sum_{i=1}^{n}\sum_{j=1}^{n}{c_{ij}x_{ij}} \\
 \sum_{i=1}^n{x_{ij}}=1 , j = 1,2,\dots,n \\
 \sum_{j=1}^n{x_{ij}}=1 , i = 1,2,\dots,n \\
-$$
+$$</div>
 
 这类问题称为指派问题(assignment problem)。
 
@@ -528,7 +531,7 @@ $$
 
 ### 数学模型
 
-$$
+<div>$$
 max(z)=920x_{11} + 480x_{12} + 650x_{13} + 340x_{14} \\
 + 870x_{21} + 510x_{22} + 700x_{23} + 350x_{24} \\
 + 880x_{31} + 500x_{32} + 720x_{33} + 400x_{34} \\
@@ -543,7 +546,7 @@ x_{12} + x_{22} + x_{32} + x_{42} = 1 \\
 x_{13} + x_{23} + x_{33} + x_{43} = 1 \\
 x_{14} + x_{24} + x_{34} + x_{44} = 1 \\
 \end{array} \right. \\
-$$
+$$</div>
 
 前四条约束和后四条约束分别是**每家公司只能承接一项工程**和**每项工程只能由一家公司来承接**。
 
@@ -669,14 +672,14 @@ rst
 
 下面这样的就不是线性规划问题：
 
-$$
+<div>$$
 min(z)=3x_1^2+2x_1x_2 \\
 \left\{\begin{array}{rl}
 2x_1+\frac{x_2+x_3}{x_1} \leq  8\\
 |x_1+x_2|+4x_3 \leq 9 \\
 x_1,x_2,x_3 \geq 0 \\
 \end{array} \right. \\
-$$
+$$</div>
 
 这是因为：
 
