@@ -12,8 +12,6 @@ tags:
 
 R语言的排列组合计算。
 
-
-
 ## 列出排列数
 
 
@@ -21,7 +19,7 @@ R语言的排列组合计算。
 gtools::permutations(5, 2)
 ```
 
-```{.code-output}
+```
 ##       [,1] [,2]
 ##  [1,]    1    2
 ##  [2,]    1    3
@@ -45,7 +43,6 @@ gtools::permutations(5, 2)
 ## [20,]    5    4
 ```
 
-
 ## 列出组合数
 
 
@@ -53,7 +50,7 @@ gtools::permutations(5, 2)
 gtools::combinations(5, 2)
 ```
 
-```{.code-output}
+```
 ##       [,1] [,2]
 ##  [1,]    1    2
 ##  [2,]    1    3
@@ -71,7 +68,7 @@ gtools::combinations(5, 2)
 t(combn(c("a", "b","c"), 2))
 ```
 
-```{.code-output}
+```
 ##      [,1] [,2]
 ## [1,] "a"  "b" 
 ## [2,] "a"  "c" 
@@ -85,7 +82,7 @@ t(combn(c("a", "b","c"), 2))
 choose(5,2)
 ```
 
-```{.code-output}
+```
 ## [1] 10
 ```
 
@@ -99,7 +96,7 @@ hg_p <- function(n, r) {
 hg_p(5,2)
 ```
 
-```{.code-output}
+```
 ## [1] 20
 ```
 
@@ -109,7 +106,7 @@ hg_p(5,2)
 combn(c("a", "b","c"), 2)
 ```
 
-```{.code-output}
+```
 ##      [,1] [,2] [,3]
 ## [1,] "a"  "a"  "b" 
 ## [2,] "b"  "c"  "c"
@@ -123,7 +120,7 @@ combn(c("a", "b","c"), 2)
 factorial(5)
 ```
 
-```{.code-output}
+```
 ## [1] 120
 ```
 
@@ -131,7 +128,7 @@ factorial(5)
 1*2*3*4*5
 ```
 
-```{.code-output}
+```
 ## [1] 120
 ```
 
@@ -142,7 +139,7 @@ factorial(5)
 9%%4
 ```
 
-```{.code-output}
+```
 ## [1] 1
 ```
 
@@ -153,7 +150,7 @@ factorial(5)
 9%/%4
 ```
 
-```{.code-output}
+```
 ## [1] 2
 ```
 

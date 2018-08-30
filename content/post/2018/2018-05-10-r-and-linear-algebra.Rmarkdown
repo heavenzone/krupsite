@@ -14,10 +14,6 @@ markup: mmark
 
 使用R语言对线性代数一些问题进行计算。
 
-```{r message=FALSE, warning=FALSE,include=FALSE}
-knitr::opts_chunk$set(class.output="code-output")
-```
-
 测试矩阵：
 
 ```{r}
