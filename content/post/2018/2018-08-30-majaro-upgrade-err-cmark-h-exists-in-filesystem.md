@@ -20,7 +20,7 @@ mathjax: no
 
 ```error
 error: failed to commit transaction (conflicting files)
-cmark-gfm: /usr/include/cmark.h exists in filesystem (owned by cmark) ##################fffff ###### ddddddddddddd
+cmark-gfm: /usr/include/cmark.h exists in filesystem (owned by cmark) 
 cmark-gfm: /usr/include/cmark_export.h exists in filesystem (owned by cmark)
 cmark-gfm: /usr/include/cmark_version.h exists in filesystem (owned by cmark)
 Errors occurred, no packages were upgraded.
